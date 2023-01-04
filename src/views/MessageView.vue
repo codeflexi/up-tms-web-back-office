@@ -10,7 +10,7 @@
           <router-link to="/pickup">
             <IconComponent
               iconString="back"
-              :iconSize="19"
+              :iconSize=19
               iconColor="#636363"
               text="Back to inbox"
               hoverColor="hover:bg-gray-100"
@@ -20,7 +20,7 @@
           <IconComponent
             @click="deleteEmail(email.id)"
             iconString="trash"
-            :iconSize="19"
+            :iconSize=19
             iconColor="#636363"
             text="Delete"
             hoverColor="hover:bg-gray-100"

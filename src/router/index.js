@@ -3,6 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import EmailView from '../views/template/EmailView.vue'
 import HomeView from '../views/HomeView.vue'
 import ShipmentView from '../views/ShipmentView.vue'
+import AddRouteView from '../views/route/AddRouteView.vue'
+import ListRouteView from '../views/route/ListRouteView.vue'
 import MessageView from '../views/MessageView.vue'
 import LoginView from '../views/LoginView.vue'
 // import PageNotFound from '../views/PageNotFound.vue'
@@ -46,6 +48,25 @@ const routes = [
       {
         path: 'shipment-detail/:id',
         component: MessageView
+      }
+    ]
+  }
+  ,
+  {
+    path: '/route',
+    beforeEnter: (to, from, next) => {
+      useUserStore().email ? next() : next('/')
+    },
+    component: EmailView,
+    children: [
+      {
+        path: '',
+        component: ListRouteView
+      },
+      {
+        path: 'route-detail/:id',
+        name: 'products.show',
+        component: AddRouteView
       }
     ]
   }

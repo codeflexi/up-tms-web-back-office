@@ -10,6 +10,8 @@ export const useShipmentStore = defineStore("shipement", {
         cargo_info: [],
         shipment_items:[]
     }),
+
+
     getters: {
       getShipments(state){
           return state.shipments

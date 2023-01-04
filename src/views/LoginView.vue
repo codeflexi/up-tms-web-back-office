@@ -38,6 +38,7 @@
                   <div class="mt-1">
                     <input
                       v-model="form.email"
+                      v-autofocus
                       id="email"
                       name="email"
                       type="email"
@@ -81,7 +82,7 @@
                     type="submit"
                     class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                   >
-                    Sign up
+                    Sign in
                   </button>
                 </div>
               </form>
@@ -98,7 +99,7 @@ import { useUserStore } from "@/stores/user-store";
 import { onMounted } from "@vue/runtime-core";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
-
+import { vAutofocus } from '@/directives/vAutofocus'
 
 const userStore = useUserStore();
 const router = useRouter();

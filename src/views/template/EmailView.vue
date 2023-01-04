@@ -9,25 +9,21 @@
           iconColor="#636363"
           text="Main menu"
           hoverColor="hover:bg-red-200"
+          iconSize=30
           class="-ml-2 mr-2" 
         />
 
         <img width="107" src="/img/up_logo.png" alt=""  class="logo-size"/>
       </div>
       <div class="flex w-full justify-between">
-        <div class="input-width w-full bg-gray-200 flex items-center p-1 px-2 rounded-lg">
-          <IconComponent 
-            iconString="magnify"
-            iconColor="#636363"
-            text="Search"
-            hoverColor="hover:bg-gray-300"
-          />
+        <div class="input-width w-full bg-gray-50 flex items-center p-1 px-2 rounded-lg">
+        
           <input
-            placeholder="Search shipment number"
+            placeholder=""
             class="
               w-full 
               h-10 
-              bg-gray-200 
+              bg-gray-50 
               border-transparent 
               border-none 
               focus:ring-0 
@@ -36,12 +32,7 @@
             "
             type="text"
           />
-          <IconComponent 
-            iconString="tune"
-            iconColor="#636363"
-            text="Show search options"
-            hoverColor="hover:bg-gray-300"
-          />
+       
         </div>
 
         <div class="flex w-32 justify-between items-center ml-6">
@@ -101,7 +92,7 @@
               justify-between
               px-6
               py-1.5
-              bg-red-100
+             
                hover:bg-red-500
               rounded-r-full
               active:bg-red-700
@@ -132,22 +123,56 @@
 
 
 
-
-        <div class="flex side-menu-item justify-between px-6 py-1.5">
+      <router-link to="/route" >
+        <div class="
+              flex
+              side-menu-item
+              justify-between
+              px-6
+              py-1.5
+             
+               hover:bg-red-500
+              rounded-r-full
+              active:bg-red-700
+              
+            ">
           <div class="flex items-center">
             <ClockOutlineIcon :size="17" />
-            <div class="text-sm pl-4">Order</div>
+            <div class="text-sm pl-4">Route</div>
           </div>
         </div>
+      </router-link>
 
-        <div class="flex side-menu-item justify-between px-6 py-1.5">
+        <div class="
+              flex
+              side-menu-item
+              justify-between
+              px-6
+              py-1.5
+             
+               hover:bg-red-500
+              rounded-r-full
+              active:bg-red-700
+              
+            ">
           <div class="flex items-center">
             <SendOutlineIcon :size="17" />
             <div class="text-sm pl-4">Product</div>
           </div>
         </div>
 
-        <div class="flex side-menu-item justify-between px-6 py-1.5">
+        <div class="
+              flex
+              side-menu-item
+              justify-between
+              px-6
+              py-1.5
+             
+               hover:bg-red-500
+              rounded-r-full
+              active:bg-red-700
+              
+            ">
           <div class="flex items-center">
             <FileOutlineIcon :size="17" />
             <div class="text-sm pl-4">Report</div>

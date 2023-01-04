@@ -12,7 +12,7 @@
       "
       :class="[hoverColor]"
       :data-tooltip-target="`tooltip-no-arrow-${iconString}`"
-      data-tooltip-placement="bottom"
+      data-tooltip-placement="top"
     >
       <component :is="icon" :size="iconSize" :fillColor="iconColor"/>
     </div>
@@ -54,6 +54,8 @@
   import ArrowLeftIcon from "vue-material-design-icons//ArrowLeft.vue";
   import TrashCanOutlineIcon from "vue-material-design-icons//TrashCanOutline.vue";
   import PlusCurcleIcon from "vue-material-design-icons/PlusCircle.vue"
+  import BarcodeScanIcon from "vue-material-design-icons/BarcodeScan.vue"
+  
 
   const props = defineProps({
     iconString: String,
@@ -68,6 +70,10 @@
 
   if (iconString.value === 'menu') {
     icon = MenuIcon
+  }
+
+  if (iconString.value === 'scan') {
+    icon = BarcodeScanIcon
   }
 
   if (iconString.value === 'magnify') {
