@@ -60,7 +60,7 @@
   const props = defineProps({
     iconString: String,
     iconColor: String,
-    iconSize: Number,
+    iconSize: {String,Number},
     text: String,
     hoverColor: String,
   })

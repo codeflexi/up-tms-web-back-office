@@ -1,6 +1,5 @@
 
 //stores/Navebar.js
-
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core';
 import {ref} from 'vue'
@@ -9,6 +8,7 @@ import axios from "axios"
 export const useGlobalStore = defineStore("global", {
     state: () => ({
         isNavbar: useLocalStorage('isNavbar',true),
+        menuActive:"SHIPMENT",
         menus: [
             {menuId:1,
                 menuNameTH:'รับสินค้า',
@@ -32,6 +32,9 @@ export const useGlobalStore = defineStore("global", {
     getters: {
       getIsNavbar(state){
           return state.isNavbar
+        },
+        getActiveMenu(state){
+          return state.menuActive
         }
 
     },
@@ -45,8 +48,13 @@ export const useGlobalStore = defineStore("global", {
             console.log(error)
         }
       },
+      async setMenuActive(name) {
+        this.$state.menuActive = name
+        console.log(name)
+      },
     },
     
+  persist: true
 })
 
 

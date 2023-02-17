@@ -6,12 +6,14 @@
 // import Convese  from '@/views/workshop/ConveseCompositApiView.vue'
 // import FileUploadView  from '@/views/workshop/FileUploadView.vue'
 // import TabView  from '@/views/workshop/TabView.vue'
-// import Modal  from '@/views/workshop/ModalView.vue'
+ //import Modal  from '@/views/workshop/ModalView.vue'
+ // import BarcodeScanView  from '@/views/workshop/BarcodeScanView.vue'
 // import AddRoute  from '@/views/route/AddRouteView.vue'
 </script>
 
 <template>
-<router-view></router-view>
+  <router-view /> 
+    
 </template>
 
 

@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 import {ref} from 'vue'
 // Import axios to make HTTP requests
 import axios from "axios"
-export const useShipmentStore = defineStore("shipement", {
+export const useShipmentStore = defineStore("shipment", {
     state: () => ({
         shipments: [],
         cargo_info: [],
@@ -52,6 +52,7 @@ export const useShipmentStore = defineStore("shipement", {
       }
     },
     
+  persist: true
 })
 
 

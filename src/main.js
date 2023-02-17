@@ -2,6 +2,7 @@ import { createApp, markRaw } from "vue";
 import { createPinia } from "pinia";
 import router from "./router";
 import  vcookies  from "vue-cookies";
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 
 
@@ -11,6 +12,8 @@ import App from "@/App.vue";
 
 const pinia = createPinia();
 
+
+pinia.use(piniaPluginPersistedstate)
 
 pinia.use(({ store }) => {
   store.router = markRaw(router);

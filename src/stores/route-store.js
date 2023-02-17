@@ -1,8 +1,9 @@
 import { defineStore } from "pinia"
 import { v4 as uuid } from 'uuid';
 import axios from "axios";
+import { useRouter } from 'vue-router';
 
-
+const router = useRouter()
 
 // state: () => {
 //     return {
@@ -15,22 +16,29 @@ export const useRouteStore = defineStore("route", {
 	state: () => ({
        route:{},
        shipments: [],
-       routes:[]
+       routes:[],
+       branchs:[]
+       ,
+    vehicles:[]
     }),
 	actions: {
 		create(shipment) {
-            let currentDate = new Date().getTime()
-
+      let currentDate = new Date().getTime()
 			this.shipments.push({...shipment, id: uuid(),createAt: currentDate.toString()})
 		},
 		delete(id) {
 			this.shipments = this.shipments.filter(shipment => shipment.id !== id)
 		},
 
-        async fetchShipmentRoutes() {
+        async fetchShipmentRoutes(page) {
             try {
-              const data = await axios.get('/api/v1/shipment-routes')
+
+             let apiURL = `/api/v1/shipment-routes?limit=9&page=${page}`;
+             const data = await axios.get(apiURL)
               this.$state.routes = data.data
+              // this.$state.routefrom = data.data.from_source
+              // this.$state.routeto = data.data.to_destination
+             
               }
               catch (error) {
                 alert(error)
@@ -38,36 +46,50 @@ export const useRouteStore = defineStore("route", {
             }
           },
 
+          async fetchBranch() {
+            try {
+              const data = await axios.get('/api/v1/branches')
+              this.$state.branchs = data.data
+
+              console.log(this.$state.branchs )
+              }
+              catch (error) {
+        
+                console.log(error)
+            }
+          },
+
+          async fetchVehicle() {
+            try {
+              const data = await axios.get('/api/v1/vehicles')
+              this.$state.vehicles = data.data
+              console.log(this.$state.vehicles)
+            }
+            catch (error) {
+            
+              console.log(error)
+            }
+          },
+      
+
         async handleCreateRoute(data) {
             try {
-              meprofile.value = await axios.post("/api/v1/auth/login", {
-                    email: data.email,
-                    password: data.password,
+              const res = await axios.post("/api/v1/shipment-routes", {
+                    from_source: data.selectedValueFrom,
+                    to_destination: data.selectedValueTo,
+                    memo: data.memo,
+                    shiped_date: data.deliveryDate,
+                    vehicle:data.selectedVehicle
+
                 });
+
+          
                 // this.authUser = response.data;
-                localStorage.setItem('token', meprofile.value.data.token);
-                console.log(meprofile.value.data.token);
-      
-                this.$state.sub = '1'
-                this.$state.id = meprofile.value.data.user.id
-                this.$state.email = meprofile.value.data.user.email
-                this.$state.picture = 'https://via.placeholder.com/48.jpg'
-                this.$state.firstName = meprofile.value.data.user.name
-                this.$state.lastName = meprofile.value.data.user.name
-      
-               // this.getUserProfile();
-      
-                this.router.push('/pickup')
-        
+                this.router.push('/delivery')
       
             } catch (error) {
-              // console.log(error);
-                    this.authErrors = error.response.data.error;
-                    Swal.fire(
-                      "" + error.response.data.error,
-                      "Please login again!!",
-                      "warning"
-                    );
+             console.log(error);
+                  
             }
         },
       
@@ -76,6 +98,12 @@ export const useRouteStore = defineStore("route", {
 	getters: {
         getShipmentRoutes(state){
             return state.routes
+          },
+          getBranch(state){
+            return state.branchs
+          },
+          getVehicle(state) {
+            return state.vehicles
           },
 		shipmentsByDate(state) {
 			const sortable = [...state.shipments]
@@ -89,6 +117,8 @@ export const useRouteStore = defineStore("route", {
             1
         }
 	}
+  ,
+  persist: true
 })
 
 

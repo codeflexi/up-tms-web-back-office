@@ -19,7 +19,6 @@ let meprofile = ref({})
 let shipmentId = ref({})
 
 
-
 export const useUserStore = defineStore('user', {
  
   state: () => ({
@@ -64,7 +63,6 @@ export const useUserStore = defineStore('user', {
    
 },
  
-
     async handleLogin(data) {
       try {
         meprofile.value = await axios.post("/api/v1/auth/login", {
@@ -84,9 +82,7 @@ export const useUserStore = defineStore('user', {
 
          // this.getUserProfile();
 
-          this.router.push('/pickup')
-      
-        
+          this.router.push('/shipment')
 
       } catch (error) {
         // console.log(error);
@@ -103,7 +99,7 @@ export const useUserStore = defineStore('user', {
    
      localStorage.clear('token');
      this.clearUser()
-     this.router.push('/pickup')
+     this.router.push('/shipment')
 },
   async getUser() {
     // await this.getToken();

@@ -35,7 +35,7 @@ watch(page, async () => {
 const getShipments = async () => {
   try {
     const res = await axios.get(`/api/v1/shipments?limit=5&page=${page.value}`);
-    pageCount.value = Math.ceil(res.data.total / 5);
+    pageCount.value = Math.ceil(res.data.total / 10);
     total.value = res.data.total;
     shipments.value = res.data;
   } catch (err) {
@@ -62,10 +62,10 @@ const formatTime = (dateString) => {
     class="flex flex-col gap-3 font-display max-w-6xl mx-auto border border-gray-200 rounded-lg w-full"
   >
     <!-- Header -->
-    <div class="p-2 text-gray-90 max-h-80 font-Prompt_600 text-3xl">Shipments</div>
+    <div class="p-1 text-gray-90 max-h-80 font-Prompt_600 text-3xl"></div>
 
     <!-- Search -->
-    <div class="p-1 text-gray-900">Search</div>
+    <div class="p-1 text-gray-900"></div>
     <!-- Content Header -->
     <div class="p-1 text-gray-900 bg-gray-100">
       <span>Page : {{ page }}</span> of <span>{{ pageCount }}</span> Results:
@@ -105,7 +105,7 @@ const formatTime = (dateString) => {
             :status="ship.status"
           >
             <!-- Card Slot -->
-            <p>{{ ship.cargo_info.iscod }}</p>
+            <p><span class="  ml-2 text-xs"> isCOD? : </span>{{ ship.cargo_info.iscod }}</p>
           </Card>
         </div>
       </div>
@@ -136,6 +136,6 @@ const formatTime = (dateString) => {
 }
 .container {
   align-items: center;
-  padding: 5px;
+  padding: 10px;
 }
 </style>

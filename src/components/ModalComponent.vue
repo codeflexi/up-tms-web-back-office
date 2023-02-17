@@ -13,7 +13,24 @@
     </transition>
   </template>
   
-  <script>
+
+<script setup>
+const emit = defineEmits(["close"]);
+
+defineProps({
+  modalActive: {
+      type: [String, Boolean],
+      default: false,
+    }
+  });
+
+  const close = () => {
+    emit("close");
+  }
+
+</script>
+
+  <!-- <script>
   export default {
     props: ["modalActive"],
     setup(props, { emit }) {
@@ -24,7 +41,7 @@
       return { close };
     },
   };
-  </script>
+  </script> -->
   
   <style lang="scss" scoped>
   .modal-animation-enter-active,

@@ -20,7 +20,7 @@
                         :size="19" 
                         fillColor="#636363" 
                     />
-                    <StarOutlineIcon :size="17"  fillColor="#636363" class="ml-4" />
+                  
                 </div>
 
                 <div class="flex items-center w-full hover:bg-slate-200">
@@ -28,6 +28,9 @@
 
                         <div class="flex justify-between items-center">
                             <div class="flex items-center w-full">
+                                <div class="font-semibold text-sm ml-1 truncate-status">
+                                    {{ status }} 
+                                </div>
                                 <div class="font-semibold text-sm ml-4 truncate-from">
                                     {{ from }} 
                                 </div>
@@ -65,6 +68,7 @@ let isSelected = ref(false)
 
 const props = defineProps({
   id: String,
+  status:String,
   from: String,
   subject: String,
   body: String,
@@ -88,6 +92,12 @@ const fomatDate = (dtime)=> {
 
 <style lang="scss">
 #MessageRow {
+    .truncate-status {
+        width: 80px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
     .truncate-from {
         width: 250px;
         text-overflow: ellipsis;

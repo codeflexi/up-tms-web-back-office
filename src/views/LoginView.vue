@@ -111,7 +111,7 @@ const form = ref({
 
 onMounted(() => {
   setTimeout(() => {
-    router.push("/pickup");
+    router.push("/shipment");
   }, 250);
 });
 

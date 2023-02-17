@@ -1,5 +1,6 @@
 <script setup>
-import { useRouteStore } from '@/stores/route-store'
+
+import { useSortStore } from '@/stores/sort-store'
 import { ref , onMounted ,watch } from 'vue'
 import Dropdown from '@/components/DropdownComponent.vue';
 import Modal from '@/views/route/AddNewRouteView.vue';
@@ -8,7 +9,7 @@ import VPagination from "@hennge/vue3-pagination";
 import "@hennge/vue3-pagination/dist/vue3-pagination.css";
 import moment from "moment";
 
-const routeStore = useRouteStore()
+const sortStore = useSortStore()
 
 const user_input = ref({
 	name: '',
@@ -56,34 +57,35 @@ const onSelectChange = (e) => {
 
 const toggleModal =  () => {
       modalActive.value = !modalActive.value;
+	
     };
 
   onMounted(async () => {
    // userStore.getEmailsByEmailAddress()
   
-   fechShipmentRoutes()
+   fechShipmentSorts()
   })
 
 watch(isrefresh,  () => {
 console.log(isrefresh)
-  fechShipmentRoutes()
+fechShipmentSorts()
 });
 
 watch(page, async () => {
-  fechShipmentRoutes()
+	fechShipmentSorts()
 });
 
-const fechShipmentRoutes = async () => {
-	await routeStore.fetchShipmentRoutes(page.value);
-  pageCount.value = Math.ceil(routeStore.getShipmentRoutes.total / 9);
-   total.value = routeStore.getShipmentRoutes.total
+const fechShipmentSorts = async () => {
+	await sortStore.fetchShipmentSorts(page.value);
+  pageCount.value = Math.ceil(sortStore.getShipmentSorts.total / 12);
+   total.value = sortStore.getShipmentSorts.total
 }
 
 const CreateUser = () => {
 	if (!user_input.value.name.trim() || !user_input.value.email.trim()) {
 		return alert("Please enter a name and email")
 	}
-	routeStore.create(user_input.value)
+	sortStore.create(user_input.value)
 
 	user_input.value = {
 		name: '',
@@ -95,14 +97,16 @@ const CreateUser = () => {
 <template>
 	<div
     id="SingleMessageSection"
-    class="w-full bg-white ml-2 rounded-t-xl h-full shadow-sm overflow-y-scroll"
+    class="w-full bg-gray-100 ml-2 rounded-t-xl h-full shadow-sm overflow-y-scroll"
   >
-    <div class="border-b">
+    <div class="border-b  bg-white">
       <div class="flex items-center justify-between px-1.5 py-0.5">
         <div class="flex">
-	
-			<button @click="toggleModal"
-			type="button"
+			<!-- add-new -->
+
+			<router-link to="/sort/add-new" active-class="active">
+
+				<div
 			class="py-2 focus:outline-none text-red-600 rounded mt-4 flex items-center"
 		  >
 			<svg
@@ -118,13 +122,12 @@ const CreateUser = () => {
 				d="M12 6v6m0 0v6m0-6h6m-6 0H6"
 			  />
 			</svg>
-			Add New Delivery
-		  </button>
-
-		  <Modal @close="toggleModal" @refresh="isrefresh = $event" :modalActive="modalActive">
-		</Modal>
+			Add another Sort
+		  </div>
+			</router-link>
+		
         </div>
-        <div class="text-xs text-gray-500">Delivery Details</div>
+        <div class="text-xs text-gray-500">Sort Details</div>
       </div>
     </div>
 
@@ -139,23 +142,23 @@ const CreateUser = () => {
 			:pages="pageCount"
 			:range-size="5"
 			active-color="#DCEDFF"
-			@update:modelValue="routeStore.fetchShipmentRoutes(page)"
+			@update:modelValue="sortStore.fetchShipmentSorts(page)"
 		  />
 		</div>
 	  </div>
 
 	
-<div class=" mt-2 ml-10">
+<div class=" mt-2 ml-10 bg-gray-100">
 		<div class="users grid md:grid-cols-3" >
-			<div v-for="route in routeStore.getShipmentRoutes.data" class="user w-fit box-border  border">
-				<router-link :to="`/delivery/delivery-detail/${route._id}`" >
-				<div>Route Numer: {{ route.route_number }} </div>
-				<div>Deliver Date: {{ moment(route.shiped_date).format("MMM D HH:mm") }} </div>
-				<h3 class=" text-lg">{{ route.from_source?.name }}</h3>
-				<h3 class=" text-lg">{{ route.to_destination?.name}}</h3>
-				<h3 class=" text-lg">{{ route.vehicle?.plate_number}}  {{ route.vehicle?.plate_province}}</h3>
-				<p><span>Details:</span>  {{ route.memo }}</p>
-				<p class="text-end text-xs"><span>#of Shipments:</span>  {{ route.shipment_ids.length }}</p>
+			<div v-for="sort in sortStore.getShipmentSorts.data" class="user w-fit box-border  border">
+				<router-link :to="`/sort/sort-detail/${sort._id}`" >
+				<div>Sort Number: {{ sort.sort_number }} </div>
+				<div>Deliver Date: {{ moment(sort.sorted_date).format("MMM D HH:mm") }} </div>
+				<h3 class=" text-lg">{{ sort.route?.name }} - {{ sort.route?.description }} </h3>
+			
+				<h2 class="  text-sm">{{ sort?.status }}</h2>
+				<h4 class="  text-xs">{{ sort.user?.name }}</h4>
+				<p class="text-end text-xs"><span>#of Shipments:</span>  {{ sort.shipment_ids.length }}</p>
 			</router-link>
 			</div>
 		</div>
@@ -171,9 +174,7 @@ const CreateUser = () => {
 	
 }
 
-body {
-	background-color: #EEE;
-}
+
 
 main {
 	padding: 1.5rem;

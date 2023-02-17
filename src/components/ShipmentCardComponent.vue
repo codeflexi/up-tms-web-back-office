@@ -1,5 +1,5 @@
 <script setup>
-    import {} from "vue"
+    import {computed} from "vue"
 
     const {_id,sales_channel,
          shipment_number ,
@@ -14,7 +14,6 @@
           cod_amount,
           shipment_fee,
           status
-
          } = defineProps([
         '_id',
         'sales_channel',
@@ -32,10 +31,38 @@
           'shipment_fee',
           'status'
     ])
+
+    // Computed Properties
+const statusClass = computed(() => {
+    if (status === 'DATA SUBMITTED') {
+        return 'bg-green-500 text-white p-3'
+      } else if (status === 'DATA RECEIVED') {
+        return 'bg-red-500 text-white p-3'
+      } 
+     else if (status === 'DATA RECEIVED') {
+        return 'bg-red-500 text-white p-3'
+      }else if (status === 'PICKING') {
+        return 'bg-green-500 text-black p-3'
+    }else if (status === 'PICKED UP') {
+        return 'bg-green-500 text-black p-3'
+      }else if (status === 'ARRIVALED DC') {
+        return 'bg-green-500 text-black p-3'
+      }else if (status === 'SORTED') {
+        return 'bg-green-500 text-black p-3'
+      }else if (status === 'ARRIVALED HUB') {
+        return 'bg-green-500 text-black p-3'
+      }else if (status === 'SHIPPED') {
+        return 'bg-green-500 text-black p-3'
+      }
+      else {
+        return 'bg-yellow-500 text-black p-3'
+      }
+    }
+);
 </script>
 <template>
     <router-link :to="`/shipment/shipment-detail/${_id}`" class="w-full">
-    <div class="  p-1 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 font-display grid grid-cols-1 divide-y cursor-pointer">
+    <div class="  p-1 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 font-display grid grid-cols-1 divide-y  hover:text-sm hover:text-red-700 cursor-pointer">
         <!-- Start 1st Row -->
         <div class=" flex  justify-start " >
             <div class="flex gap-1 p-1  justify-around w-5/6">
@@ -60,13 +87,12 @@
                     <span class="px-2"> {{picked_up_date}}</span>                 
                 </div>
 
-
+                <!-- "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded -->
               </div>
-            
+              
               <div class="flex justify-end gap-1 p-1 bg-white w-1/6">
                 <div>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        {{status}}
+                    <button :class="statusClass" class="font-bold py-2 px-4 rounded " v-if="status">{{status}}
                       </button>
                 </div>
               </div>
@@ -97,12 +123,7 @@
 <!-- End 4 Row -->
           <slot></slot>
 
-          <div class="flex justify-end gap-1 p-1 bg-white">
-            <div class="p-1 text-white bg-red-500">1</div>
-            <div class="p-1 text-white bg-red-500">2</div>
-            <div class="p-1 text-white bg-red-500">3</div>
-          
-          </div>
+      
         
      
         

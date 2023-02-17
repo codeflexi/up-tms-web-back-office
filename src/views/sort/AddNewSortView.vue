@@ -6,21 +6,21 @@
     <div class="border-b grid grid-cols-3">
       <div class="flex items-center justify-between px-2 my-3">
         <span>
-          <router-link to="/route">
+          <router-link to="/sort">
             <IconComponent
               iconString="back"
               :iconSize=19
               iconColor="#636363"
-              text="Back to inbox"
+              text="Back to sort"
               hoverColor="hover:bg-gray-100"
             />
           </router-link>
 
           <button  @click="handleSubmittedData"   v-if="products.length"
           type="button"
-            class="px-4 py-2 rounded focus:outline-none bg-red-500 text-white font-semibold hover:bg-red-300"
+            class="px-4 py-2 rounded focus:outline-none bg-gray-900 text-white font-semibold hover:bg-gray-500"
           >
-            Update Route
+            CONFIRM SORT
           </button>
 
 
@@ -52,7 +52,7 @@
         hoverColor="hover:bg-gray-300"
       />
       <input
-        placeholder="Scan Sorting number"
+        placeholder="Scan Shipment/Waybill number"
         v-model.lazy="newItem"
         v-on:keyup.enter="submitKey"
         maxlength="100"
@@ -87,7 +87,7 @@
             <h3
               class="text-gray-500 text-xs tracking-widest title-font mb-1 uppercase inline-block mr-2"
             >
-              Please Scan Sort Number
+              Please Scan WBN
             </h3>
             <h2 class="text-gray-900 title-font text-lg font-medium">
               Loading
@@ -97,6 +97,10 @@
         </div>
       </div>
       <div class="flex flex-wrap -m-1" v-else>
+
+       <!-- {{ route_master.route}} -->
+
+        <!-- {{sortStore.getRouteMaster.count?sortStore.route_master.name:'error'}} -->
         <div
           class="lg:w-1/4 md:w-1/2 p-4 w-full mb-4 bg-white rounded-t-xl shadow-sm"
           v-for="product in orderShipments"
@@ -113,6 +117,7 @@
             />
           </router-link> -->
           <div class="mt-4">
+            <p class="mt-1 text-xl bg-yellow-300 text-gray-900 text-center border-spacing-1 rounded-lg" v-text="product.routename"></p>
             <h3
               class="text-gray-500 text-xs tracking-widest title-font mb-1 uppercase inline-block mr-2"
               v-for="category in product.categories"
@@ -123,10 +128,9 @@
               v-text="product.name"
             ></h2>
             <p class="mt-1" v-text="product.status"></p>
-            <p class="mt-1" v-text="product.id"></p>
-            <p class="mt-1" v-text="product.waybill_number"></p>
-            <p class="mt-1" v-text="product.shipment_number"></p>
-            <p class="mt-1" v-text="product.createAt"></p>
+            <p class="mt-1" v-text="product.shipto"></p>
+            <p class="mt-1" v-text="product.postcode"></p>
+            <p class="mt-1" v-text="product.routeid"></p>
             <p>
               <IconComponent
                 @click="removeShipment(product)"
@@ -159,8 +163,13 @@ import { vAutofocus } from "@/directives/vAutofocus";
 import BaseInput from "@/components/TextInputComponent.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { storeToRefs } from "pinia";
 import { useRoute , useRouter } from "vue-router";
 
+import { useSortStore } from '@/stores/sort-store'
+const sortStore = useSortStore()
+
+const {route_master} = storeToRefs(useSortStore())
 
 
 //import {ref} from '@vue/reactivity'
@@ -207,14 +216,21 @@ const formatCurrency = (amount) => {
   return amount.toLocaleString("en-TH", { style: "currency", currency: "THB" });
 };
 
-const handleUpdateShipmentStatus = async (id) => {
+const handleSubmittSort = async (data) => {
   try {
-    let apiURL = `/api/v1/shipments/${id}`;
+    let apiURL = "/api/v1/shipment-sorts";
 
-    const res = await axios.put(apiURL, {
-      status: "SORTED",
-      updated_date: Date.now(),
+    const res = await axios.post(apiURL, {
+      route: data.sortId,
+      shipment_ids: data.shipmentId,
     });
+
+    Swal.fire(
+  'Create New Sorting succesfully!',
+  'You clicked the button!',
+  'success'
+)
+
   } catch (error) {
     console.log(error);
   }
@@ -222,30 +238,55 @@ const handleUpdateShipmentStatus = async (id) => {
 
 const handleSubmittedData = async () => {
   try {
-    let id = route.params.id
-    let apiURL = `/api/v1/shipment-routes/${id}`;
-    const res = await axios.put(
-      apiURL,
-      {
-        shipment_ids: unique.value,
-        updated_date: Date.now(),
-      }
-    );
    
-//Update Shipment Status
-    const shipmentIds = unique.value;
-    for (const index in shipmentIds) {
-      handleUpdateShipmentStatus(shipmentIds[index]);
-      console.log(shipmentIds[index]);
+    // Delete Duplicate
+    unique.value = [];
+    for (const item of products.value) {
+      const isDuplicate = unique.value.find(
+        (obj) => obj.shipment_id === item.shipment_id
+      );
+      if (!isDuplicate) {
+        unique.value.push({id: item.shipment_id,
+          routeid:item.routeid,
+          routename:item.routename
+        }
+        );
+      }
     }
 
-    
-    
-    router.push("/route");
+
+// Grouping by Route Master
+
+let ObjMap =[];
+
+unique.value.forEach(element => {
+    var makeKey = element.routeid;
+  
+     if(!ObjMap[makeKey]) {
+       ObjMap[makeKey] = [];
+     }
+    ObjMap[makeKey].push([
+      element.id
+]);
+   });
+
+  let ObjArr = Object.entries(ObjMap);
+  
+  let upload = {}
+
+for (const item of ObjArr){
+  upload  = {
+    sortId:item[0],
+    shipmentId:item[1]
+  } 
+const res = await handleSubmittSort(upload)
+
+}
+
+    router.push("/sort");
   } catch (error) {
     console.log(error);
-
-    Swal.fire("Data incorrect", "Please try again!!", "warning");
+    Swal.fire(`Data incorrect - ${error}`, "Please try again!!", "warning");
   }
 };
 
@@ -261,8 +302,24 @@ const addRouting = async (shipment_number) => {
   for (const item in shipment1.value) {
     let currentDate = new Date().getTime();
 
+     // Call fetch Router Master from store
+    const postcode = shipment1.value[item].data[0].zipcode
+    const rt =  await sortStore.fetchRouteMaster(postcode);
+
+    // set Route master
+   // console.log(rt.data.data[0])
+    sortStore.setRouteMaster(rt.data.data[0])
+  
+    
+
+    // const rt_master = ref([route_master])
+
+    // for (const rt of rt_master.value) {
+    //   console.log(rt[0].data[0]._id)
+    // }
+
     products.value.push({
-      id: `RO${Date.now()}${Math.round(Math.random() * 10)}`,
+      id: `SO${Date.now()}${Math.round(Math.random() * 10)}`,
       shipment_id: shipment1.value[item].data[0]._id,
       waybill_numnber: shipment1.value[item].data[0].waybill_number,
       shipment_number: shipment1.value[item].data[0].shipment_number,
@@ -273,21 +330,21 @@ const addRouting = async (shipment_number) => {
       company: shipment1.value[item].data[0].company.name,
       shipto: shipment1.value[item].data[0].shipping_full_name,
       status: shipment1.value[item].data[0].status,
+      postcode: shipment1.value[item].data[0].zipcode,
+      routename: sortStore.routeName ,
+      routeid: sortStore.routeId ,
       createAt: currentDate.toString(),
     });
 
-    
-    unique.value = [];
-    for (const item of products.value) {
-      const isDuplicate = unique.value.find(
-        (obj) => obj.shipment_id === item.shipment_id
-      );
-      if (!isDuplicate) {
-        unique.value.push(item.shipment_id);
-      }
-    }
+   
   }
 };
+
+// // getRoute Master Not use 
+// const getRouteMaster = (postcode) => {
+//   sortStore.fetchRouteMaster(postcode);
+// };
+
 
 // Computed Properties
 const totalCost = computed(() => {

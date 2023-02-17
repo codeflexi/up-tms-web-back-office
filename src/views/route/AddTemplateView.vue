@@ -3,10 +3,7 @@ import { useRouteStore } from '@/stores/route-store'
 import { ref , onMounted ,watch } from 'vue'
 import Dropdown from '@/components/DropdownComponent.vue';
 import Modal from '@/views/route/AddNewRouteView.vue';
-import IconComponent from "@/components/IconComponent.vue";
-import VPagination from "@hennge/vue3-pagination";
-import "@hennge/vue3-pagination/dist/vue3-pagination.css";
-import moment from "moment";
+
 
 const routeStore = useRouteStore()
 
@@ -41,43 +38,31 @@ const sort = ref(false)
 
 const shipments = ref({});
 let page = ref(1);
-let pageCount = ref(0);
-let total = ref(0);
+let pageCount = ref(null);
+let total = ref(null);
 const modalActive = ref(false);
 
 const selectedValue = ref('')
-const isrefresh = ref('')
 
 const onSelectChange = (e) => {
   selectedValue.value = e.target.value
 }
 
-
-
-const toggleModal =  () => {
+const toggleModal = () => {
       modalActive.value = !modalActive.value;
     };
 
   onMounted(async () => {
    // userStore.getEmailsByEmailAddress()
-  
-   fechShipmentRoutes()
+   await routeStore.fetchShipmentRoutes();
   })
 
-watch(isrefresh,  () => {
-console.log(isrefresh)
-  fechShipmentRoutes()
+  watch(page, async () => {
+  //    const res = await axios.get(`/api/v1/shipments?limit=5&page=${page.value}`)
+  //    pageCount.value = response.data.count;
+  //    shipments.value = res.data;
+  //await routeStore.fetchShipmentRoutes();
 });
-
-watch(page, async () => {
-  fechShipmentRoutes()
-});
-
-const fechShipmentRoutes = async () => {
-	await routeStore.fetchShipmentRoutes(page.value);
-  pageCount.value = Math.ceil(routeStore.getShipmentRoutes.total / 9);
-   total.value = routeStore.getShipmentRoutes.total
-}
 
 const CreateUser = () => {
 	if (!user_input.value.name.trim() || !user_input.value.email.trim()) {
@@ -93,74 +78,72 @@ const CreateUser = () => {
 </script>
 
 <template>
-	<div
-    id="SingleMessageSection"
-    class="w-full bg-white ml-2 rounded-t-xl h-full shadow-sm overflow-y-scroll"
-  >
-    <div class="border-b">
-      <div class="flex items-center justify-between px-1.5 py-0.5">
-        <div class="flex">
-	
-			<button @click="toggleModal"
-			type="button"
-			class="py-2 focus:outline-none text-red-600 rounded mt-4 flex items-center"
-		  >
-			<svg
-			  xmlns="http://www.w3.org/2000/svg"
-			  fill="none"
-			  viewBox="0 0 24 24"
-			  class="w-6 stroke-current mr-2"
-			>
-			  <path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-			  />
-			</svg>
-			Add New Delivery
-		  </button>
+	<main class=" font-display w-full">
+		<h1>Add</h1>
 
-		  <Modal @close="toggleModal" @refresh="isrefresh = $event" :modalActive="modalActive">
-		</Modal>
-        </div>
-        <div class="text-xs text-gray-500">Delivery Details</div>
-      </div>
-    </div>
+		<form @submit.prevent="CreateUser">
+			<input 
+				type="text"
+				placeholder="e.g. Naruto Uzumaki"
+				v-model="user_input.name"  />
+			<input 
+				type="email" 
+				placeholder="e.g. hokage@ninja.com"
+				v-model="user_input.email" />
+			<input 
+				type="submit" 
+				value="Create user" />
 
+				
 
-	<div class="p-1 text-gray-900 bg-gray-100">
-		<span>Page : {{ page }}</span> of <span>{{ pageCount }}</span> Results:
-		<span>{{ total }} records</span>
-  
-		<div class="flex items-center justify-center p-1 text-xl">
-		  <v-pagination
-			v-model="page"
-			:pages="pageCount"
-			:range-size="5"
-			active-color="#DCEDFF"
-			@update:modelValue="routeStore.fetchShipmentRoutes(page)"
-		  />
-		</div>
-	  </div>
+				<div>
+					<label for="gender-selection">Select gender</label>
 
-	
-<div class=" mt-2 ml-10">
-		<div class="users grid md:grid-cols-3" >
-			<div v-for="route in routeStore.getShipmentRoutes.data" class="user w-fit box-border  border">
-				<router-link :to="`/delivery/delivery-detail/${route._id}`" >
-				<div>Route Numer: {{ route.route_number }} </div>
-				<div>Deliver Date: {{ moment(route.shiped_date).format("MMM D HH:mm") }} </div>
-				<h3 class=" text-lg">{{ route.from_source?.name }}</h3>
-				<h3 class=" text-lg">{{ route.to_destination?.name}}</h3>
-				<h3 class=" text-lg">{{ route.vehicle?.plate_number}}  {{ route.vehicle?.plate_province}}</h3>
-				<p><span>Details:</span>  {{ route.memo }}</p>
-				<p class="text-end text-xs"><span>#of Shipments:</span>  {{ route.shipment_ids.length }}</p>
+					
+					<select class="form-select px-4 py-3  rounded-xl w-full ring-red-700"
+					name="gender-selection"
+					@change="onSelectChange(e)"
+					v-model="selectedValue"
+				  >
+				  <option v-for="item in route_name" :value="item.id" :key="item.id">
+					{{item.title}}
+				</option>
+				  </select>
+					<p>Selected value: {{selectedValue}}</p>
+				  </div>
+
+		</form>
+
+		<Modal @close="toggleModal" :modalActive="modalActive">
+		
+		  </Modal>
+
+		<div><button @click="toggleModal" type="button">Open Modal</button></div>
+
+		<!-- <label><span>Sort</span><input type="checkbox" v-model="sort" /></label>
+
+		<div class="users" v-if="!sort">
+           
+			<div v-for="route in routeStore.getShipmentRoutes.data" class="user">
+                <router-link :to="`/route/route-detail/${route._id}`" >
+				<div>ID: {{ route._id }}</div>
+				<h3>{{ route.route_number }}</h3>
+				<p>{{ route.memo }}</p>
+            </router-link>
+			</div>
+       
+		</div> -->
+
+		<div class="users">
+			<div v-for="route in routeStore.getShipmentRoutes.data" class="user">
+				<router-link :to="`/route/route-detail/${route._id}`" >
+				<div>ID: {{ route._id }}</div>
+				<h3>{{ route.route_number }}</h3>
+				<p>{{ route.memo }}</p>
 			</router-link>
 			</div>
 		</div>
-	</div>
-	</div>
+	</main>
 </template>
 
 <style scoped>
@@ -256,7 +239,6 @@ label input {
 	margin-bottom: 1rem;
 	border-radius: 0.5rem;
 	transition: 0.2s;
-	width: 95%;
 }
 
 .user div {
@@ -266,7 +248,7 @@ label input {
 }
 
 .user h3 {
-	
+	font-size: 1.5rem;
 	margin-bottom: 0.5rem;
 	transition: 0.2s;
 }

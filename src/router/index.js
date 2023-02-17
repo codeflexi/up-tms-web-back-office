@@ -1,11 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import EmailView from '../views/template/EmailView.vue'
-import HomeView from '../views/HomeView.vue'
-import ShipmentView from '../views/ShipmentView.vue'
+import ListPickupView from '../views/pickup/ListPickupView.vue'
+import ListShipmentView from '../views/shipment/ListShipmentView.vue'
+import ViewShipmentView from '../views/shipment/ViewShipmentView.vue'
+
 import AddRouteView from '../views/route/AddRouteView.vue'
+import AddNewRouteView from '../views/route/AddNewRouteView.vue'
 import ListRouteView from '../views/route/ListRouteView.vue'
-import MessageView from '../views/MessageView.vue'
+import ListSortView from '../views/sort/ListSortView.vue'
+import AddNewSortView from '../views/sort/AddNewSortView.vue'
+import ViewSortView from '../views/sort/ViewSortView.vue'
+import MessageView from '../views/pickup/MessageView.vue'
 import LoginView from '../views/LoginView.vue'
 // import PageNotFound from '../views/PageNotFound.vue'
 
@@ -25,7 +31,7 @@ const routes = [
     children: [
       {
         path: '',
-        component: HomeView
+        component: ListPickupView
       },
       {
         path: 'shipment-detail/:id',
@@ -43,17 +49,40 @@ const routes = [
     children: [
       {
         path: '',
-        component: ShipmentView
+        component: ListShipmentView
       },
       {
         path: 'shipment-detail/:id',
-        component: MessageView
+        component: ViewShipmentView
       }
     ]
   }
   ,
+  
   {
-    path: '/route',
+    path: '/sort',
+    beforeEnter: (to, from, next) => {
+      useUserStore().email ? next() : next('/')
+    },
+    component: EmailView,
+    children: [
+      {
+        path: '',
+        component: ListSortView
+      },
+      {
+        path: 'add-new',
+        component: AddNewSortView
+      },
+      {
+        path: 'sort-detail/:id',
+        component: ViewSortView
+      }
+      
+    ]
+  },
+  {
+    path: '/delivery',
     beforeEnter: (to, from, next) => {
       useUserStore().email ? next() : next('/')
     },
@@ -64,7 +93,7 @@ const routes = [
         component: ListRouteView
       },
       {
-        path: 'route-detail/:id',
+        path: 'delivery-detail/:id',
         name: 'products.show',
         component: AddRouteView
       }

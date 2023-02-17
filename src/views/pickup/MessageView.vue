@@ -7,7 +7,7 @@
       <div class="flex items-center justify-between px-1.5 py-0.5">
         <div class="flex">
          
-          <router-link to="/pickup">
+          <router-link to="/shipment">
             <IconComponent
               iconString="back"
               :iconSize=19
@@ -27,6 +27,9 @@
             class="ml-3"
           />
         </div>
+
+      
+
         <div class="text-xs text-gray-500">Shipement Details</div>
       </div>
     </div>
@@ -228,6 +231,7 @@ import { onMounted, ref, reactive, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user-store";
 import IconComponent from "@/components/IconComponent.vue";
+
 
 import { useShipmentStore } from "@/stores/shipment-store";
 
