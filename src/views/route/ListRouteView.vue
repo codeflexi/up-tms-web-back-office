@@ -15,27 +15,6 @@ const user_input = ref({
 	email: ''
 })
 
-const route_name = ref([
-
-          {
-            title: 'Bangna',
-			id:'bn',
-            link: '#'
-          },
-          {
-            title: 'Samutprakarn',
-			id:'sm',
-            link:'#'
-          },
-          {
-            title: 'Korat',
-			id:'kr',
-            link: '#'
-          }
-     
-
-])
-
 
 const sort = ref(false)
 

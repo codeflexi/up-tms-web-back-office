@@ -1,5 +1,6 @@
 <script setup>
     import {computed} from "vue"
+    import QrcodeVue from 'qrcode.vue'
 
     const {_id,sales_channel,
          shipment_number ,
@@ -11,6 +12,7 @@
           ship_from_name,
           item_type,
           weight,
+          dimension,
           cod_amount,
           shipment_fee,
           status
@@ -27,6 +29,7 @@
           'ship_from_name',
           'item_type',
           'weight',
+          'dimension',
           'cod_amount',
           'shipment_fee',
           'status'
@@ -62,7 +65,7 @@ const statusClass = computed(() => {
 </script>
 <template>
     <router-link :to="`/shipment/shipment-detail/${_id}`" class="w-full">
-    <div class="  p-1 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 font-display grid grid-cols-1 divide-y  hover:text-sm hover:text-red-700 cursor-pointer">
+    <div class="  p-1 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 font-display grid grid-cols-1 divide-y text-sm hover:text-lg hover:text-red-700 cursor-pointer">
         <!-- Start 1st Row -->
         <div class=" flex  justify-start " >
             <div class="flex gap-1 p-1  justify-around w-5/6">
@@ -83,7 +86,7 @@ const statusClass = computed(() => {
               
 
                 <div class="p-1 text-gray-900 w-1/2">
-                    <span class=" font-kanit">Picked up time: </span>
+                    <span class=" font-kanit">Shipment Date/Time : </span>
                     <span class="px-2"> {{picked_up_date}}</span>                 
                 </div>
 
@@ -95,6 +98,11 @@ const statusClass = computed(() => {
                     <button :class="statusClass" class="font-bold py-2 px-4 rounded " v-if="status">{{status}}
                       </button>
                 </div>
+                <div>
+                  <qrcode-vue v-if="waybill_number" :value="waybill_number" :size="50" level="H" />
+             
+              </div>
+                
               </div>
          </div>
         <!-- End 1st Row -->
@@ -118,6 +126,7 @@ const statusClass = computed(() => {
                 <span class="font-kanit"> Item Type :</span>  {{item_type}} </div>
                 
             <div class="p-1 text-gray-900 w-4/12">   <span class="font-kanit"> Weight(KG.) :</span>  {{weight}}</div>
+            <div class="p-1 text-gray-900 w-4/12">   <span class="font-kanit"> Dimension L*W*H (CM.) :</span>  {{dimension}}</div>
             <div class="p-1 text-gray-900 w-4/12"> <span class="font-kanit"> Cod Amount(Bath) :</span>  {{cod_amount}} </div>
           </div>
 <!-- End 4 Row -->

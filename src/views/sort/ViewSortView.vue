@@ -38,6 +38,10 @@
       <div class="w-full text-xl ml-20 font-light pt-5">
         {{ sortStore.sort?.status}}
       </div>
+      <div class="w-full text-xl ml-20 font-light pt-1">
+        <qrcode-vue  :value="sortStore.sort?.sort_number" :size="100" level="H" />
+      </div>
+    
     </div>
 
   
@@ -101,17 +105,25 @@ class="max-w-none p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:
                 </tr>
               </thead>
               <tbody>
+               
+               
+
+            
                 <tr
                   v-for="ship in sortStore.shipmentItems"
                   :key="ship._id"
                   class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 font-display"
                 >
-                
+            
+
                   <td
                     class="py-4 px-6 font-semibold text-gray-900 dark:text-white"
                   >
+                  <router-link :to="`/shipment/shipment-detail/${ship._id}`">
                     {{ ship?.waybill_number }}
+                  </router-link>
                   </td>
+             
                   <td
                     class="py-4 px-6 font-semibold text-gray-900 dark:text-white"
                   >
@@ -132,7 +144,9 @@ class="max-w-none p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:
                   >
                     {{ ship?.city}} -  {{ ship?.state}} -  {{ ship?.zipcode}}
                   </td>
+              
                 </tr>
+            
               </tbody>
             </table>
           </div>
@@ -149,7 +163,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user-store";
 import IconComponent from "@/components/IconComponent.vue";
 import moment from "moment";
-
+import QrcodeVue from 'qrcode.vue'
 
 import { useSortStore } from "@/stores/sort-store";
 

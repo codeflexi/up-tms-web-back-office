@@ -233,11 +233,11 @@ const handleSubmittedData = async () => {
     );
    
 //Update Shipment Status
-    const shipmentIds = unique.value;
-    for (const index in shipmentIds) {
-      handleUpdateShipmentStatus(shipmentIds[index]);
-      console.log(shipmentIds[index]);
-    }
+    // const shipmentIds = unique.value;
+    // for (const index in shipmentIds) {
+    //   handleUpdateShipmentStatus(shipmentIds[index]);
+    //   console.log(shipmentIds[index]);
+    // }
 
     
     
@@ -249,11 +249,11 @@ const handleSubmittedData = async () => {
   }
 };
 
-const addRouting = async (shipment_number) => {
+const addRouting = async (sort_number) => {
  
   // Get Data
   let res = await axios.get(
-    `/api/v1/shipments?waybill_number=${shipment_number}`
+    `/api/v1/shipment-sorts?sort_number=${sort_number}`
   );
 
   const shipment1 = ref([res.data]);
@@ -264,14 +264,14 @@ const addRouting = async (shipment_number) => {
     products.value.push({
       id: `RO${Date.now()}${Math.round(Math.random() * 10)}`,
       shipment_id: shipment1.value[item].data[0]._id,
-      waybill_numnber: shipment1.value[item].data[0].waybill_number,
-      shipment_number: shipment1.value[item].data[0].shipment_number,
+      waybill_numnber: shipment1.value[item].data[0].sort_number,
+      shipment_number: shipment1.value[item].data[0].sort_number,
       categories: [
-        { name: shipment1.value[item].data[0].waybill_number },
-        { name: shipment1.value[item].data[0].shipment_number },
+        { name: shipment1.value[item].data[0].sort_number },
+        { name: shipment1.value[item].data[0].sort_number },
       ],
-      company: shipment1.value[item].data[0].company.name,
-      shipto: shipment1.value[item].data[0].shipping_full_name,
+      company:shipment1.value[item].data[0].sort_number ,
+      shipto: shipment1.value[item].data[0].sort_number,
       status: shipment1.value[item].data[0].status,
       createAt: currentDate.toString(),
     });

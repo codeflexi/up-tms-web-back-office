@@ -9,27 +9,27 @@
           <router-link to="/sort">
             <IconComponent
               iconString="back"
-              :iconSize=19
+              :iconSize="19"
               iconColor="#636363"
               text="Back to sort"
               hoverColor="hover:bg-gray-100"
             />
           </router-link>
 
-          <button  @click="handleSubmittedData"   v-if="products.length"
-          type="button"
+          <button
+            @click="handleSubmittedData"
+            v-if="products.length"
+            type="button"
             class="px-4 py-2 rounded focus:outline-none bg-gray-900 text-white font-semibold hover:bg-gray-500"
           >
             CONFIRM SORT
           </button>
-
-
         </span>
         <span class="flex justify-start">
           <IconComponent
             class="-m-2 -ml-2.5"
             iconString="trash"
-            :iconSize=19
+            :iconSize="19"
             iconColor="#636363"
             text="Delete selected"
             hoverColor="hover:bg-red-300"
@@ -66,12 +66,10 @@
         iconColor="#636363"
         text="Show search options"
         hoverColor="hover:bg-gray-300"
-        iconSize=40
+        iconSize="40"
         class="mr-2"
       />
     </div>
-
-
 
     <div class="container px-2 py-8 mx-auto">
       <div class="flex flex-wrap -m-4" v-if="!products.length">
@@ -97,8 +95,7 @@
         </div>
       </div>
       <div class="flex flex-wrap -m-1" v-else>
-
-       <!-- {{ route_master.route}} -->
+        <!-- {{ route_master.route}} -->
 
         <!-- {{sortStore.getRouteMaster.count?sortStore.route_master.name:'error'}} -->
         <div
@@ -117,7 +114,10 @@
             />
           </router-link> -->
           <div class="mt-4">
-            <p class="mt-1 text-xl bg-yellow-300 text-gray-900 text-center border-spacing-1 rounded-lg" v-text="product.routename"></p>
+            <p
+              class="mt-1 text-xl bg-yellow-300 text-gray-900 text-center border-spacing-1 rounded-lg"
+              v-text="product.routename"
+            ></p>
             <h3
               class="text-gray-500 text-xs tracking-widest title-font mb-1 uppercase inline-block mr-2"
               v-for="category in product.categories"
@@ -137,7 +137,7 @@
                 v-if="products.length"
                 class="-m-2 -ml-2.5"
                 iconString="trash"
-                :iconSize=19
+                :iconSize="19"
                 iconColor="#636363"
                 text="Delete selected"
                 hoverColor="hover:bg-red-300"
@@ -164,13 +164,12 @@ import BaseInput from "@/components/TextInputComponent.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { storeToRefs } from "pinia";
-import { useRoute , useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
-import { useSortStore } from '@/stores/sort-store'
-const sortStore = useSortStore()
+import { useSortStore } from "@/stores/sort-store";
+const sortStore = useSortStore();
 
-const {route_master} = storeToRefs(useSortStore())
-
+const { route_master } = storeToRefs(useSortStore());
 
 //import {ref} from '@vue/reactivity'
 
@@ -226,11 +225,10 @@ const handleSubmittSort = async (data) => {
     });
 
     Swal.fire(
-  'Create New Sorting succesfully!',
-  'You clicked the button!',
-  'success'
-)
-
+      "Create New Sorting succesfully!",
+      "You clicked the button!",
+      "success"
+    );
   } catch (error) {
     console.log(error);
   }
@@ -238,7 +236,6 @@ const handleSubmittSort = async (data) => {
 
 const handleSubmittedData = async () => {
   try {
-   
     // Delete Duplicate
     unique.value = [];
     for (const item of products.value) {
@@ -246,43 +243,37 @@ const handleSubmittedData = async () => {
         (obj) => obj.shipment_id === item.shipment_id
       );
       if (!isDuplicate) {
-        unique.value.push({id: item.shipment_id,
-          routeid:item.routeid,
-          routename:item.routename
-        }
-        );
+        unique.value.push({
+          id: item.shipment_id,
+          routeid: item.routeid,
+          routename: item.routename,
+        });
       }
     }
 
+    // Grouping by Route Master
 
-// Grouping by Route Master
+    let ObjMap = [];
 
-let ObjMap =[];
+    unique.value.forEach((element) => {
+      var makeKey = element.routeid;
+      if (!ObjMap[makeKey]) {
+        ObjMap[makeKey] = [];
+      }
+      ObjMap[makeKey].push([element.id]);
+    });
 
-unique.value.forEach(element => {
-    var makeKey = element.routeid;
-  
-     if(!ObjMap[makeKey]) {
-       ObjMap[makeKey] = [];
-     }
-    ObjMap[makeKey].push([
-      element.id
-]);
-   });
+    let ObjArr = Object.entries(ObjMap);
 
-  let ObjArr = Object.entries(ObjMap);
-  
-  let upload = {}
+    let upload = {};
 
-for (const item of ObjArr){
-  upload  = {
-    sortId:item[0],
-    shipmentId:item[1]
-  } 
-const res = await handleSubmittSort(upload)
-
-}
-
+    for (const item of ObjArr) {
+      upload = {
+        sortId: item[0],
+        shipmentId: item[1],
+      };
+      const res = await handleSubmittSort(upload);
+    }
     router.push("/sort");
   } catch (error) {
     console.log(error);
@@ -291,7 +282,6 @@ const res = await handleSubmittSort(upload)
 };
 
 const addRouting = async (shipment_number) => {
- 
   // Get Data
   let res = await axios.get(
     `/api/v1/shipments?waybill_number=${shipment_number}`
@@ -302,15 +292,13 @@ const addRouting = async (shipment_number) => {
   for (const item in shipment1.value) {
     let currentDate = new Date().getTime();
 
-     // Call fetch Router Master from store
-    const postcode = shipment1.value[item].data[0].zipcode
-    const rt =  await sortStore.fetchRouteMaster(postcode);
+    // Call fetch Router Master from store
+    const postcode = shipment1.value[item].data[0].zipcode;
+    const rt = await sortStore.fetchRouteMaster(postcode);
 
     // set Route master
-   // console.log(rt.data.data[0])
-    sortStore.setRouteMaster(rt.data.data[0])
-  
-    
+    // console.log(rt.data.data[0])
+    sortStore.setRouteMaster(rt.data.data[0]);
 
     // const rt_master = ref([route_master])
 
@@ -331,20 +319,17 @@ const addRouting = async (shipment_number) => {
       shipto: shipment1.value[item].data[0].shipping_full_name,
       status: shipment1.value[item].data[0].status,
       postcode: shipment1.value[item].data[0].zipcode,
-      routename: sortStore.routeName ,
-      routeid: sortStore.routeId ,
+      routename: sortStore.routeName,
+      routeid: sortStore.routeId,
       createAt: currentDate.toString(),
     });
-
-   
   }
 };
 
-// // getRoute Master Not use 
+// // getRoute Master Not use
 // const getRouteMaster = (postcode) => {
 //   sortStore.fetchRouteMaster(postcode);
 // };
-
 
 // Computed Properties
 const totalCost = computed(() => {

@@ -64,12 +64,12 @@
 
         <router-link to="/shipment">
           <div
-            class="flex side-menu-item justify-between px-6 py-1.5 hover:bg-red-500 hover:rounded-r-full"
+            class="flex side-menu-item justify-between px-6 py-1.5 hover:bg-red-800 hover:text-white  hover:rounded-r-full"
             v-bind:class="{ 'bg-indigo-500': active === 'SHIPMENT' }"
             @click="setActive('SHIPMENT')"
           >
             <div class="flex items-center">
-              <StarOutlineIcon :size="17" />
+              <BoxIcon :size="24" />
               <div class="text-sm pl-4">SHIPMENT</div>
             </div>
           </div>
@@ -77,25 +77,38 @@
 
         <router-link to="/pickup">
           <div
-            class="flex side-menu-item justify-between px-6 py-1.5 hover:bg-red-500 rounded-r-full "
+            class="flex side-menu-item justify-between px-6 py-1.5  hover:bg-red-800 hover:text-white  rounded-r-full "
             v-bind:class="{ 'bg-indigo-500': active === 'PICK UP' }"
             @click="setActive('PICK UP')"
           >
             <div class="flex items-center">
-              <WarehouseIcon :size="17" />
+              <WarehouseIcon :size="24" />
               <div class="text-sm pl-4 font-semibold">PICK UP</div>
+            </div>
+          </div>
+        </router-link>
+
+        <router-link to="/receive">
+          <div
+            class="flex side-menu-item justify-between px-6 py-1.5 hover:bg-red-800 hover:text-white rounded-r-full "
+            v-bind:class="{ 'bg-indigo-500': active === 'RECEIVE-HUB' }"
+            @click="setActive('RECEIVE-HUB')"
+          >
+            <div class="flex items-center">
+              <CubeScanIcon :size="24" />
+              <div class="text-sm pl-4 font-semibold">RECEIVE [HUB]</div>
             </div>
           </div>
         </router-link>
 
         <router-link to="/sort">
           <div
-            class="flex side-menu-item justify-between px-6 py-1.5 hover:bg-red-500 rounded-r-full"
+            class="flex side-menu-item justify-between px-6 py-1.5 hover:bg-red-800 hover:text-white rounded-r-full"
             v-bind:class="{ 'bg-indigo-500': active === 'SORT' }"
             @click="setActive('SORT')"
           >
             <div class="flex items-center">
-              <ClockOutlineIcon :size="17" />
+              <RobotIcon :size="24" />
               <div class="text-sm pl-4">SORT</div>
             </div>
           </div>
@@ -103,13 +116,27 @@
 
         <router-link to="/delivery">
           <div
-            class="flex side-menu-item justify-between px-6 py-1.5 hover:bg-red-500 rounded-r-full active:bg-red-700"
+            class="flex side-menu-item justify-between px-6 py-1.5  hover:bg-red-800 hover:text-white  rounded-r-full active:bg-red-700"
             v-bind:class="{ 'bg-indigo-500': active === 'DELIVERY' }"
             @click="setActive('DELIVERY')"
             >
             <div class="flex items-center">
-              <ClockOutlineIcon :size="17" />
+              <TruckOutline :size="24" />
               <div class="text-sm pl-4">DELIVERY</div>
+            </div>
+          </div>
+        </router-link>
+        <div class="border-b border-b-gray-300 my-2.5"></div>
+
+        <router-link to="/receive">
+          <div
+            class="flex side-menu-item justify-between px-6 py-1.5  hover:bg-red-800 hover:text-white  rounded-r-full "
+            v-bind:class="{ 'bg-indigo-500': active === 'RECEIVE-DC' }"
+            @click="setActive('RECEIVE-DC')"
+          >
+            <div class="flex items-center">
+              <ReceiveIcon :size="24" />
+              <div class="text-sm pl-4 font-semibold">RECEIVE [DC]</div>
             </div>
           </div>
         </router-link>
@@ -222,12 +249,22 @@ import UserComponent from "@/components/UserComponent.vue";
 
 import PencilOutlineIcon from "vue-material-design-icons/PencilOutline.vue";
 import WarehouseIcon from "vue-material-design-icons/Warehouse.vue";
+import TruckOutline from "vue-material-design-icons/TruckOutline.vue";
 import StarOutlineIcon from "vue-material-design-icons/StarOutline.vue";
+import RobotIcon from "vue-material-design-icons/RobotIndustrialOutline.vue";
+import BoxIcon from "vue-material-design-icons/ArchiveOutline.vue";
+import ReceiveIcon from "vue-material-design-icons/HandCoinOutline.vue";
+
+
+
+
+
 import ClockOutlineIcon from "vue-material-design-icons/ClockOutline.vue";
 import SendOutlineIcon from "vue-material-design-icons/SendOutline.vue";
 import FileOutlineIcon from "vue-material-design-icons/FileOutline.vue";
 import PlusIcon from "vue-material-design-icons/Plus.vue";
 import CloseIcon from "vue-material-design-icons/Close.vue";
+import CubeScanIcon from 'vue-material-design-icons/CubeScan.vue';
 
 import { useUserStore } from "@/stores/user-store";
 import { useGlobalStore } from "@/stores/global-store";

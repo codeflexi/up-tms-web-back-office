@@ -1,10 +1,12 @@
 <template>
-  <transition name="modal-animation" class=" h-fit">
-    <div v-show="modalActive" class="modal border-b  overflow-scroll">
+  <transition name="modal-animation" class="h-fit">
+    <div v-show="modalActive" class="modal border-b overflow-scroll">
       <transition name="modal-animation-inner">
         <div v-show="modalActive" class="modal-inner">
           <!-- Start Content -->
-          <form @submit.prevent="createRoute"
+          {{ shipmentId }}
+          <form
+            @submit.prevent="handleSubmittedData"
             class="rounded-lg mx-auto max-w-2xl w-full mt-5 shadow-lg bg-white border-t-4 border-red-600 font-Prompt_400"
           >
             <div class="px-8 pt-4 pb-4 space-y-6">
@@ -29,16 +31,23 @@
                   </svg>
                 </button>
               </div>
-              {{form_input.routeNumber}}
+              {{ form_input.routeNumber }}
 
               <div>
-                <label class="mb-1 block" for="title">Delivery Date/Time</label>
-                <input type="datetime-local" class="form-input px-4 py-3 rounded-xl" v-model="form_input.deliveryDate">
+                <label class="mb-1 block" for="title"
+                  >Plan Picking Up Date/Time</label
+                >
+                <input
+                  type="datetime-local"
+                  class="form-input px-4 py-3 rounded-xl"
+                  v-model="form_input.deliveryDate"
+                />
               </div>
 
               <div>
                 <label class="mb-1 block" for="title">Vehicle</label>
-                <select v-if="routeStore.getVehicle"
+                <select
+                  v-if="routeStore.getVehicle"
                   class="form-select px-4 py-3 rounded-xl w-full ring-red-700"
                   name="gender-selection"
                   @change="onSelectChange(e)"
@@ -49,18 +58,19 @@
                     :value="item._id"
                     :key="item._id"
                   >
-                    {{ item.plate_number }}   {{ item.plate_province }}
+                    {{ item.plate_number }} {{ item.plate_province }}
                   </option>
                 </select>
                 <p>Selected value: {{ form_input.selectedVehicle }}</p>
               </div>
-             
-              
+
               <div>
                 <p class="mb-2">Details</p>
-                <textarea class="form-textarea px-4 py-3 rounded-xl w-full" v-model="form_input.memo">
+                <textarea
+                  class="form-textarea px-4 py-3 rounded-xl w-full"
+                  v-model="form_input.memo"
+                >
                 </textarea>
-            
               </div>
             </div>
             <div
@@ -69,18 +79,18 @@
               <button
                 type="button"
                 class="py-2 rounded focus:outline-none text-red-600 font-semibold"
-              >
-               
-              </button>
+              ></button>
               <div class="flex space-x-4">
-                <button @click="close"
+                <button
+                  @click="close"
                   type="button"
                   class="px-4 py-2 rounded focus:outline-none border-2 border-gray-300 text-red-600 font-semibold"
                 >
                   Cancel
                 </button>
-                <button @click="close"
-                type="submit"
+                <button
+                  @click="close"
+                  type="submit"
                   class="px-4 py-2 rounded focus:outline-none bg-red-600 text-white font-semibold"
                 >
                   Update Route
@@ -96,81 +106,19 @@
 </template>
 
 <script setup>
-import { defineProps , ref , onMounted } from "vue";
-import { useRouteStore } from '@/stores/route-store'
-import TextInput from '@/components/shares/Textinput.vue'
-const emit = defineEmits(["close","refresh"]);
+import { defineProps, ref, onMounted, toRefs } from "vue";
+import { useRouteStore } from "@/stores/route-store";
+import { useShipmentStore } from "@/stores/shipment-store";
+import TextInput from "@/components/shares/Textinput.vue";
+import Swal from "sweetalert2";
 
-const routeStore = useRouteStore()
+const emit = defineEmits(["close", "refresh"]);
+const routeStore = useRouteStore();
+const shipmentStore = useShipmentStore();
 
-
-const route_name = ref([
-
-          {
-            title: 'Bangna',
-			id:'bn',
-            link: '#'
-          },
-          {
-            title: 'Samutprakarn',
-			id:'sm',
-            link:'#'
-          },
-          {
-            title: 'Korat',
-			id:'kr',
-            link: '#'
-          }
-     
-
-])
-
-
-
-const form_input = ref({
-  routeNumber:'',
-	selectedValueTo: '',
-	selectedValueFrom: '',
-  deliveryDate:'',
-  selectedVehicle:'',
-  memo:'',
-  desc:''
-})
-
-
-
-onMounted(() => {
-  routeStore.fetchBranch()
-  routeStore.fetchVehicle()
- // const randomInit = `RO${Date.now()}${(Math.round(Math.random() * 10))}`
-   //form_input.routeNumber.value = randomInit
-  });
-
-  const createRoute = () => {
-	if (!form_input.value.selectedValueTo.trim() || !form_input.value.selectedValueFrom.trim()) {
-		return alert("Please enter a source and destination")
-	}
-	
-  routeStore.handleCreateRoute(form_input.value)
- 
-  const randomInit = `RO${Date.now()}${(Math.round(Math.random() * 10))}`
-form_input.value.routeNumber = randomInit
-refresh(randomInit)
-
-	form_input.value = {
-  routeNumber:'',
-	selectedValueTo: '',
-	selectedValueFrom: '',
-  deliveryDate:'',
-  selectedVehicle:'',
-  memo:''
-	}
-}
-
-const onSelectChange = (e) => {
-  //selectedValueTo.value = e.target.value
- 
-}
+// Data Attributes
+const products = ref([]);
+const unique = ref([]);
 
 // Props
 const props = defineProps({
@@ -178,13 +126,115 @@ const props = defineProps({
     type: [String, Boolean],
     default: false,
   },
+  shipmentId: Array,
 });
 const close = () => {
   emit("close");
 };
 
 const refresh = (routeNumber) => {
-  emit("refresh",routeNumber);
+  emit("refresh", routeNumber);
+};
+
+const { shipmentId } = toRefs(props);
+
+const form_input = ref({
+  routeNumber: "",
+  selectedValueTo: "",
+  selectedValueFrom: "",
+  deliveryDate: "",
+  selectedVehicle: "",
+  memo: "",
+  desc: "",
+});
+
+onMounted(() => {
+  routeStore.fetchBranch();
+  routeStore.fetchVehicle();
+});
+
+const getShipments = async () => {
+  console.log(shipmentId.value);
+  shipmentStore.fetchShipmentByIds(shipmentId.value);
+  console.log(shipmentStore.getShipmentsById);
+};
+
+const createPickUp = () => {
+  if (
+    !form_input.value.selectedValueTo.trim() ||
+    !form_input.value.selectedValueFrom.trim()
+  ) {
+    return alert("Please enter a source and destination");
+  }
+
+  routeStore.handleCreateRoute(form_input.value);
+
+  const randomInit = `RO${Date.now()}${Math.round(Math.random() * 10)}`;
+  form_input.value.routeNumber = randomInit;
+  refresh(randomInit);
+
+  form_input.value = {
+   
+    deliveryDate: "",
+    selectedVehicle: "",
+    memo: "",
+  };
+};
+
+const getAllShipment = () => {
+  //selectedValueTo.value = e.target.value
+};
+
+const onSelectChange = (e) => {
+  //selectedValueTo.value = e.target.value
+};
+
+const groupedShipments =  async () => {
+  // Grouping Shipment by company and warehouse
+  const arr = Array.from(shipmentStore.getShipmentsById.data);
+  const grouped = {};
+  arr.forEach((shipment) => {
+    const key = `${shipment.company}_${shipment.warehouse}`;
+    if (!grouped[key]) {
+      grouped[key] = [];
+    }
+    grouped[key].push([shipment._id]);
+  });
+  //return grouped;
+  console.log(grouped);
+
+  // Generate JSON to create new Picking Up Plan
+  let ObjArr = Object.entries(grouped);
+
+  let upload = {};
+  for (const item of ObjArr) {
+    const text = item[0];
+    const parts = text.split("_");
+    upload = {
+      company: parts[0],
+      warehouse: parts[1],
+      shipmentId: item[1],
+      vehicle:form_input.value.selectedVehicle,
+      pickupDate:form_input.value.deliveryDate,
+      memo: form_input.value.memo,
+
+    };
+
+    await shipmentStore.handleCreatePickUp(upload)
+
+  }
+  return upload
+};
+
+const handleSubmittedData = () => {
+  try {
+    const submit = groupedShipments()
+    console.log('submit')
+    console.log(submit)
+  } catch (error) {
+    console.log(error);
+    Swal.fire(`Data incorrect - ${error}`, "Please try again!!", "warning");
+  }
 };
 
 // const updateRow = (payload) =>{

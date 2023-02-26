@@ -34,9 +34,9 @@ watch(page, async () => {
 
 const getShipments = async () => {
   try {
-    const res = await axios.get(`/api/v1/shipments?limit=5&page=${page.value}`);
+    const res = await axios.get(`/api/v1/shipments?status=PICKING UP&limit=5&page=${page.value}`);
     pageCount.value = Math.ceil(res.data.total / 10);
-    total.value = res.data.total;
+    total.value = res.count;
     shipments.value = res.data;
   } catch (err) {
     console.log(err);
@@ -81,11 +81,10 @@ const formatTime = (dateString) => {
             >
           </div>
           <div class="w-1/6 px-4">
-            <router-link to="shipment/shipment-list-picking">
             <span
-              class="text-sm text-center block my-4 p-3  rounded border border-solid border-blueGray-100"
+              class="text-sm text-center block my-4 p-3  text-white bg-red-900 rounded border border-solid border-blueGray-100"
               >Picking Up</span
-            ></router-link> 
+            >
           </div>
           <div class="w-1/6 px-4">
             <span
@@ -94,11 +93,10 @@ const formatTime = (dateString) => {
             >
           </div>
           <div class="w-1/6 px-4">
-            <router-link to="shipment/shipment-list-sort">
             <span
               class="text-sm text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100"
               >Sorted</span
-            ></router-link> 
+            >
           </div>
           <div class="w-1/6 px-4">
             <span

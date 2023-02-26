@@ -4,7 +4,13 @@ import EmailView from '../views/template/EmailView.vue'
 import ListPickupView from '../views/pickup/ListPickupView.vue'
 import ListShipmentView from '../views/shipment/ListShipmentView.vue'
 import ViewShipmentView from '../views/shipment/ViewShipmentView.vue'
+import ListShipmentView_Picking from '../views/shipment/ListShipmentView_Picking.vue'
+import ListShipmentView_Sort from '../views/shipment/ListShipmentView_Sort.vue'
+import ViewShipmentTrackingView from '../views/shipment/ViewShipmentTrackingView.vue'
 
+
+
+import AddReceiveView from '../views/receive/AddReceiveView.vue'
 import AddRouteView from '../views/route/AddRouteView.vue'
 import AddNewRouteView from '../views/route/AddNewRouteView.vue'
 import ListRouteView from '../views/route/ListRouteView.vue'
@@ -41,6 +47,24 @@ const routes = [
   }
   ,
   {
+    path: '/receive',
+    beforeEnter: (to, from, next) => {
+      useUserStore().email ? next() : next('/')
+    },
+    component: EmailView,
+    children: [
+      {
+        path: '',
+        component: AddReceiveView
+      },
+      {
+        path: 'shipment-detail/:id',
+        component: MessageView
+      }
+    ]
+  }
+  ,
+  {
     path: '/shipment',
     beforeEnter: (to, from, next) => {
       useUserStore().email ? next() : next('/')
@@ -52,8 +76,20 @@ const routes = [
         component: ListShipmentView
       },
       {
+        path: 'shipment-list-picking',
+        component: ListShipmentView_Picking
+      },
+      {
+        path: 'shipment-list-sort',
+        component: ListShipmentView_Sort
+      },
+      {
         path: 'shipment-detail/:id',
         component: ViewShipmentView
+      },
+      {
+        path: 'shipment-tracking/:id',
+        component: ViewShipmentTrackingView
       }
     ]
   }

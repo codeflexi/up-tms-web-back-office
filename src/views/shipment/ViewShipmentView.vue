@@ -7,7 +7,7 @@
       <div class="flex items-center justify-between px-1.5 py-0.5">
         <div class="flex">
          
-          <router-link to="/shipment">
+          <a href="javascript:history.go(-1)">
             <IconComponent
               iconString="back"
               :iconSize=19
@@ -15,33 +15,37 @@
               text="Back to inbox"
               hoverColor="hover:bg-gray-100"
             />
-          </router-link>
+          </a>
 
-          <IconComponent
-            @click="deleteEmail(email.id)"
-            iconString="trash"
-            :iconSize=19
-            iconColor="#636363"
-            text="Delete"
-            hoverColor="hover:bg-gray-100"
-            class="ml-3"
-          />
+         
+<div class="flex items-center justify-between px-2">
+        <router-link :to="`/shipment/shipment-tracking/${shipmentStore.getShipments.data._id}`">
+        <span
+        class="bg-gray-100 text-gray-800  text-sm font-normal mr-2 px-2.5 py-0.5 rounded hover:bg-red-700 hover:text-white dark:bg-gray-600 dark:text-gray-300"
+        >Status Tracking</span>
+    </router-link>
+
+
+      </div>
         </div>
 
-      
-
+  
         <div class="text-xs text-gray-500">Shipement Details</div>
       </div>
     </div>
 
     <div class=" bg-gray-100" v-if="shipmentStore.getShipments.data">
-      <div class="w-full text-xl ml-20 font-light pt-5">
+      <div class="w-full text-xl ml-20 font-light pt-5  text-red-800" >
         {{ shipmentStore.getShipments.data.status}}
       </div>
+      <div class="w-full text-xl ml-20 font-light pt-1">
+        <qrcode-vue v-if="shipmentStore.getShipments.data.waybill_number" :value="shipmentStore.getShipments.data.waybill_number" :size="100" level="H" />
+      </div>
+    
+             
     </div>
 
   
-   
 
     <div class="w-full flex bg-gray-100">
       <img
@@ -76,11 +80,11 @@ class="max-w-none p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:
 
 <p class="mb-3 font-display text-gray-700 dark:text-gray-400">
   <span class="font-kanit"> Receive From :</span>
-  {{ shipmentStore.getShipments.data.warehouse.name }} {{ shipmentStore.getShipments.data.warehouse.phone }}
+  {{ shipmentStore.getShipments.data.warehouse?.name }} {{ shipmentStore.getShipments.data.warehouse?.phone }}
 </p>
 
 <p class="mb-3 font-display text-gray-700 dark:text-gray-400">
-  {{ shipmentStore.getShipments.data.warehouse.address_line1 }}
+  {{ shipmentStore.getShipments.data.warehouse?.address_line1 }}
 </p>
 <div class="bg-gray-300 w-full h-0.5"></div>
 <p class="mb-3 font-display text-gray-700 dark:text-gray-400">
@@ -108,7 +112,7 @@ class="max-w-none p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:
               </p>
               <p>
                 <span class="text-xs text-gray-500 font-normal"
-                  >Dimension L*W*D (CM)</span
+                  >Dimension L*W*H (CM)</span
                 >
                 :
                 <span
@@ -231,6 +235,7 @@ import { onMounted, ref, reactive, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user-store";
 import IconComponent from "@/components/IconComponent.vue";
+import QrcodeVue from 'qrcode.vue'
 
 
 import { useShipmentStore } from "@/stores/shipment-store";
