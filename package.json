@@ -15,6 +15,7 @@
     "dotenv": "^16.0.3",
     "i": "^0.3.7",
     "moment": "^2.29.4",
+    "multer": "^1.4.5-lts.1",
     "npm": "^9.4.1",
     "pinia": "^2.0.28",
     "pinia-plugin-persistedstate": "^3.0.1",

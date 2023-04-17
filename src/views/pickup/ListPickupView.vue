@@ -54,11 +54,12 @@
       <ShipmentRow
         :id="ship._id"
         :status="ship.status"
-        :from="ship.company.name + ' ' + ship.waybill_number"
+        :from="ship.company?.name + ' ' + ship.waybill_number"
         :subject="ship.shipment_number"
         :body="ship.shipping_address_line1"
         :time="ship.createdAt"
         :shipment="ship.shipmentDetail"
+        :bypass="ship.is_by_pass"
         :hasViewed="true"
         @selectedId="selectedId"
       />
@@ -145,7 +146,6 @@ const  deleteSelected = async () => {
     shipmentToAssigne.forEach(async (id) => {
       //await userStore.deleteEmail(id);
       //console.log(id);
-      
     });
 
     shipmentDetail.value = shipmentToAssigne//

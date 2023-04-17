@@ -76,7 +76,7 @@
             <div class=" flex" v-for="ship in orderShipments" :key="ship.id">
               <form>
         
-            <BaseInput v-model="ship.weight"  id="TextWeight" label="น้ำหนัก Weigh(KG.):" type="text" class="base-input  w-52" />
+            <BaseInput v-model="product_input.weight"  id="TextWeight" label="น้ำหนัก Weigh(KG.):" type="text" class="base-input  w-52" />
             <div class="flex items-center justify-between my-3">
               <BaseInput v-model="product_input.l" label="ยาว(Length CM.):" type="text" class="base-input" />
             <BaseInput v-model="product_input.w" label="กว้าง(Width CM.):" type="text" class="base-input" />
@@ -125,7 +125,7 @@
               <div class="content-center w-full mx-auto">
                 <!-- Shipment Card -->
                 <Card
-                  :_id="ship._id"
+                  :_id="ship.shipment_id"
                   :sales_channel="ship.sales_channel"
                   :shipment_number="ship.shipment_number"
                   :waybill_number="ship.waybill_numnber"
@@ -175,8 +175,10 @@ import moment from "moment";
 import Card from "@/components/ShipmentCardComponent.vue";
 
 import { useSortStore } from "@/stores/sort-store";
+import { useShipmentStore } from "@/stores/shipment-store";
 import ShipmentCardComponent from "../../components/ShipmentCardComponent.vue";
 const sortStore = useSortStore();
+const shipmentStore = useShipmentStore();
 
 const { route_master } = storeToRefs(useSortStore());
 
@@ -190,7 +192,8 @@ const product_input = ref({
 	h: 0,
   w:0,
   l:0,
-  cod_amount:0
+  cod_amount:0,
+  id:''
 })
 
 // Props
@@ -241,8 +244,8 @@ const handleSubmittSort = async (data) => {
 
 const handleSubmittedData = async () => {
   try {
-   
-    alert('summit')
+    shipmentStore.handleCreateReceiving(product_input.value.id,product_input.value)
+    products.value = [];
   } catch (error) {
     console.log(error);
     Swal.fire(`Data incorrect - ${error}`, "Please try again!!", "warning");
@@ -279,6 +282,7 @@ const addRouting = async (shipment_number) => {
     product_input.value.w =  shipment1.value[item].data[0].cargo_info.width || 0;
     product_input.value.h = shipment1.value[item].data[0].cargo_info.height || 0;
     product_input.value.cod_amount = shipment1.value[item].data[0].cargo_info.cod_amount || 0;
+    product_input.value.id = shipment1.value[item].data[0]._id
 
 
     products.value.push({

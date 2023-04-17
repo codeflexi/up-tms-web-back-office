@@ -28,8 +28,9 @@
 
                         <div class="flex justify-between items-center">
                             <div class="flex items-center w-full">
-                                <div class="font-semibold text-sm ml-1 truncate-status">
-                                    {{ status }} 
+                            
+                                <div class="font-semibold text-sm text-center ml-4 truncate-bypass">
+                                    {{ bypass }} 
                                 </div>
                                 <div class="font-semibold text-sm ml-4 truncate-from">
                                     {{ from }} 
@@ -71,12 +72,13 @@ const props = defineProps({
   status:String,
   from: String,
   subject: String,
+  bypass: String,
   body: String,
   time: String,
   hasViewed: Boolean
 });
 
-const { id, from, subject, body, time ,hasViewed} = toRefs(props);
+const { id, from, subject, body,bypass, time ,hasViewed} = toRefs(props);
 
 
 
@@ -94,6 +96,12 @@ const fomatDate = (dtime)=> {
 #MessageRow {
     .truncate-status {
         width: 80px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .truncate-bypass {
+        width: 10px;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;

@@ -4,7 +4,7 @@
       <transition name="modal-animation-inner">
         <div v-show="modalActive" class="modal-inner">
           <!-- Start Content -->
-          {{ shipmentId }}
+
           <form
             @submit.prevent="handleSubmittedData"
             class="rounded-lg mx-auto max-w-2xl w-full mt-5 shadow-lg bg-white border-t-4 border-red-600 font-Prompt_400"
@@ -174,7 +174,6 @@ const createPickUp = () => {
   refresh(randomInit);
 
   form_input.value = {
-   
     deliveryDate: "",
     selectedVehicle: "",
     memo: "",
@@ -189,7 +188,7 @@ const onSelectChange = (e) => {
   //selectedValueTo.value = e.target.value
 };
 
-const groupedShipments =  async () => {
+const groupedShipments = async () => {
   // Grouping Shipment by company and warehouse
   const arr = Array.from(shipmentStore.getShipmentsById.data);
   const grouped = {};
@@ -214,32 +213,42 @@ const groupedShipments =  async () => {
       company: parts[0],
       warehouse: parts[1],
       shipmentId: item[1],
-      vehicle:form_input.value.selectedVehicle,
-      pickupDate:form_input.value.deliveryDate,
+      vehicle: form_input.value.selectedVehicle,
+      pickupDate: form_input.value.deliveryDate,
       memo: form_input.value.memo,
-
     };
-
-    await shipmentStore.handleCreatePickUp(upload)
-
+    await shipmentStore.handleCreatePickUp(upload);
   }
-  return upload
+  return upload;
 };
 
-const handleSubmittedData = () => {
+const handleSubmittedData = async () => {
   try {
-    const submit = groupedShipments()
-    console.log('submit')
-    console.log(submit)
+    Swal.fire({
+      title: "Do you want to save the changes?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Save",
+      denyButtonText: `Don't save`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        groupedShipments();
+        Swal.fire("Data was Saved Successfully!", "", "success");
+        window.location.reload();
+      } else if (result.isDenied) {
+        Swal.fire("Changes are not saved", "", "info");
+      }
+    });
   } catch (error) {
-    console.log(error);
-    Swal.fire(`Data incorrect - ${error}`, "Please try again!!", "warning");
+    // Swal.fire(`Data incorrect - ${error}`, "Please try again!!", "warning");
+    swalMessage(`Data incorrect - ${err_msg}`, "Please try again!!", "warning");
   }
 };
 
-// const updateRow = (payload) =>{
-//   console.log(payload)
-// }
+const swalMessage = (err_msg, next_process, err_type) => {
+  return Swal.fire(err_msg, next_process, err_type);
+};
 </script>
 
 <!-- <script>

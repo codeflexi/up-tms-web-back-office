@@ -41,7 +41,7 @@ const routes = [
       },
       {
         path: 'shipment-detail/:id',
-        component: MessageView
+        component: ViewShipmentView
       }
     ]
   }

@@ -19,7 +19,7 @@
 
          
 <div class="flex items-center justify-between px-2">
-        <router-link :to="`/shipment/shipment-tracking/${shipmentStore.getShipments.data._id}`">
+        <router-link :to="`/shipment/shipment-tracking/${shipmentStore.getShipments.data?._id}`">
         <span
         class="bg-gray-100 text-gray-800  text-sm font-normal mr-2 px-2.5 py-0.5 rounded hover:bg-red-700 hover:text-white dark:bg-gray-600 dark:text-gray-300"
         >Status Tracking</span>

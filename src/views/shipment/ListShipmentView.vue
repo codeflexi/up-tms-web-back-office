@@ -70,39 +70,39 @@ const formatTime = (dateString) => {
         <div class="flex flex-wrap">
           <div class="w-1/6 px-4">
             <span
-              class="text-sm text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100"
+              class="text-sm text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100 hover:bg-red-800 hover:text-white"
               >All</span
             >
           </div>
           <div class="w-1/6 px-4">
             <span
-              class="text-sm text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100"
+              class="text-sm text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100  hover:bg-red-800 hover:text-white"
               >Submitted</span
             >
           </div>
           <div class="w-1/6 px-4">
             <router-link to="shipment/shipment-list-picking">
             <span
-              class="text-sm text-center block my-4 p-3  rounded border border-solid border-blueGray-100"
+              class="text-sm text-center block my-4 p-3  rounded border border-solid border-blueGray-100  hover:bg-red-800 hover:text-white"
               >Picking Up</span
             ></router-link> 
           </div>
           <div class="w-1/6 px-4">
             <span
-              class="text-sm text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100"
+              class="text-sm text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100  hover:bg-red-800 hover:text-white"
               >Picked Up</span
             >
           </div>
           <div class="w-1/6 px-4">
             <router-link to="shipment/shipment-list-sort">
             <span
-              class="text-sm text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100"
+              class="text-sm text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100  hover:bg-red-800 hover:text-white"
               >Sorted</span
             ></router-link> 
           </div>
           <div class="w-1/6 px-4">
             <span
-              class="text-sm text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100"
+              class="text-sm text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100  hover:bg-red-800 hover:text-white"
               >Delivered</span
             >
           </div>
@@ -132,13 +132,13 @@ const formatTime = (dateString) => {
           <!-- Shipment Card -->
           <Card
             :_id="ship._id"
-            :sales_channel="ship.company.name"
+            :sales_channel="ship.company?.name"
             :shipment_number="ship.shipment_number"
             :waybill_number="ship.waybill_number"
             :ship_to_name="ship.shipping_full_name"
             :ship_to_province="ship.city + ' ' + ship.state"
-            :ship_from_name="ship.warehouse.name"
-            :ship_from_province="ship.warehouse.city + ' ' +  ship.warehouse.state"
+            :ship_from_name="ship.warehouse?.name"
+            :ship_from_province="ship.warehouse?.city + ' ' +  ship.warehouse?.state"
             :item_type="ship.cargo_info.item_type"
             :weight="ship.cargo_info.weight"
             :dimension="ship.cargo_info.lengths + '*' + ship.cargo_info.width +
@@ -146,7 +146,7 @@ const formatTime = (dateString) => {
             :cod_amount="ship.cargo_info.cod_amount"
             :shipment_fee="ship.cargo_info.cod_amount"
             :picked_up_date="
-              formatDate(ship.created_date) + ' ' + formatTime(ship.created_date)
+              formatDate(ship.createdAt) + ' ' + formatTime(ship.createdAt)
             "
             :status="ship.status"
           >

@@ -3,10 +3,12 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 // Import axios to make HTTP requests
+import Swal from "sweetalert2";
 import axios from "axios"
 export const useShipmentStore = defineStore("shipment", {
   state: () => ({
     shipments: [],
+    shipment_logs:[],
     shipments_id: [],
     cargo_info: [],
     shipment_items: []
@@ -26,19 +28,13 @@ export const useShipmentStore = defineStore("shipment", {
     getShipmentsById(state) {
       return state.shipments_id
     },
+    getShipmentLogs(state) {
+      return state.shipment_logs
+    },
 
   },
   actions: {
-    async fetchShipments() {
-      try {
-        const data = await axios.get('https://jsonplaceholder.typicode.com/users')
-        this.$state.shipments = data.data
-      }
-      catch (error) {
-        alert(error)
-        console.log(error)
-      }
-    },
+  
     async fetchShipmentById(id) {
       try {
 
@@ -47,6 +43,19 @@ export const useShipmentStore = defineStore("shipment", {
         this.$state.shipments = data.data
         this.$state.cargo_info = data.data.data.cargo_info
         this.$state.shipment_items = data.data.data.shipment_items
+      }
+      catch (error) {
+        //alert(error)
+        console.log(error)
+      }
+    },
+    async fetchShipmentLogs(id) {
+      try {
+
+        let apiURL = `/api/v1/shipments/${id}/shipmentlogs`;
+       // api/v1/shipments/63fad9485f7d13a3c2f33b6d/shipmentlogs
+        const data = await axios.get(apiURL)
+        this.$state.shipment_logs = data.data
       }
       catch (error) {
         //alert(error)
@@ -77,15 +86,38 @@ export const useShipmentStore = defineStore("shipment", {
           shipment_ids: data.shipmentId,
           warehouse: data.warehouse,
         });
-
         // this.authUser = response.data;
         this.router.push('/pickup')
-
       } catch (error) {
         console.log(error);
       }
     },
-
+    async handleCreateReceiving(id,data) {
+      try {
+        console.log(data.weight)
+        let apiURL = `/api/v1/shipments/${id}`;
+        const res = await axios.put(apiURL, {
+          status:'ARRIVED HUB',
+          updated_date:Date.now(),
+          cargo_info: {
+            weight: data.weight,
+            lengths:data.l,
+            width:data.w,
+            height:data.h,
+            iscod: data.cod_amount>0?"Y":"N",
+            cod_amount: data.cod_amount,
+        },
+        });
+        Swal.fire(
+          "Update Data succesfully!",
+          "You clicked the button!",
+          "success"
+        );
+        //this.router.push('/receive')
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 
   persist: true

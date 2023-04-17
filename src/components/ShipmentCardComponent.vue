@@ -38,7 +38,7 @@
     // Computed Properties
 const statusClass = computed(() => {
     if (status === 'DATA SUBMITTED') {
-        return 'bg-green-500 text-white p-3'
+        return 'bg-yellow-200 text-gray-1000 p-3'
       } else if (status === 'DATA RECEIVED') {
         return 'bg-red-500 text-white p-3'
       } 
