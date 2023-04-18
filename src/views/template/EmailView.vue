@@ -52,14 +52,15 @@
         class="bg-red-50 h-screen p-2 pt-2 shadow-lg font-Prompt_600"
       >
         <!-- v-if="isNavbar"  -->
+        <router-link to="/shipment/upload">
         <div
-          @click="newMessageOpen = true"
+          
           class="flex items-center justify-center bg-red-400 h-8 mt-1 rounded-2xl ml-2 p-8 cursor-pointer text-white uppercase racking-wider font-semibold text-sm px-5 py-3 shadow-lg hover:bg-red-500"
         >
           <PlusIcon :size="25" class="mr-2" />
           <span class="text-lg">เพิ่ม บุคกิ้ง</span>
         </div>
-
+      </router-link>
         <div class="my-5"></div>
 
         <router-link to="/shipment">

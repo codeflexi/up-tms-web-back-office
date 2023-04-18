@@ -7,6 +7,7 @@ import {ref} from 'vue'
 import axios from "axios"
 export const useGlobalStore = defineStore("global", {
     state: () => ({
+        companies:[],
         isNavbar: useLocalStorage('isNavbar',true),
         menuActive:"SHIPMENT",
         menus: [
@@ -35,7 +36,10 @@ export const useGlobalStore = defineStore("global", {
         },
         getActiveMenu(state){
           return state.menuActive
-        }
+        },
+        getCompany(state){
+          return state.companies
+        },
 
     },
     actions: {
@@ -52,7 +56,18 @@ export const useGlobalStore = defineStore("global", {
         this.$state.menuActive = name
         console.log(name)
       },
+      async fetchCompany() {
+        try {
+          const data = await axios.get('/api/v1/companies')
+          this.$state.companies = data.data
+
+          }
+          catch (error) {
+            console.log(error)
+        }
+      },
     },
+
     
   persist: true
 })

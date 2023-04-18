@@ -242,13 +242,14 @@ const handleSubmittedData = async () => {
     });
   } catch (error) {
     // Swal.fire(`Data incorrect - ${error}`, "Please try again!!", "warning");
-    swalMessage(`Data incorrect - ${err_msg}`, "Please try again!!", "warning");
+    swalMessage(`Data incorrect - ${error}`, "Please try again!!", "warning");
   }
 };
 
 const swalMessage = (err_msg, next_process, err_type) => {
   return Swal.fire(err_msg, next_process, err_type);
 };
+
 </script>
 
 <!-- <script>

@@ -4,6 +4,8 @@ import EmailView from '../views/template/EmailView.vue'
 import ListPickupView from '../views/pickup/ListPickupView.vue'
 import ListShipmentView from '../views/shipment/ListShipmentView.vue'
 import ViewShipmentView from '../views/shipment/ViewShipmentView.vue'
+import UploadShipmentFileView from '../views/shipment/UploadShipmentFileView.vue'
+
 import ListShipmentView_Picking from '../views/shipment/ListShipmentView_Picking.vue'
 import ListShipmentView_Sort from '../views/shipment/ListShipmentView_Sort.vue'
 import ViewShipmentTrackingView from '../views/shipment/ViewShipmentTrackingView.vue'
@@ -78,6 +80,10 @@ const routes = [
       {
         path: 'shipment-list-picking',
         component: ListShipmentView_Picking
+      },
+      {
+        path: 'upload',
+        component: UploadShipmentFileView
       },
       {
         path: 'shipment-list-sort',
