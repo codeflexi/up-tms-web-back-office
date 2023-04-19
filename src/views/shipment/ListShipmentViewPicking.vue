@@ -80,7 +80,7 @@ const getShipments = async () => {
 
 
     const res = await axios.get(
-      `/api/v1/shipments?limit=25&page=${page.value}${filter}${filter1}${filter2}`
+      `/api/v1/shipments?status=PICKING UP&limit=25&page=${page.value}${filter}${filter1}${filter2}`
     );
     pageCount.value = Math.ceil(res.data.total / 25);
     total.value = res.data.total;
@@ -118,45 +118,39 @@ const formatTime = (dateString) => {
           <div class="w-1/8 px-4">
             <router-link to="/">
             <span
-              class="text-center block my-4 p-3 text-white bg-red-800 rounded border border-solid border-red-900 hover:bg-red-800 hover:text-white"
-              >All</span
+            class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
+            >All</span
             >
           </router-link>
           </div>
           <div class="w-1/8 px-4">
-            <router-link to="shipment/shipment-list-submitted">
             <span
               class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
               >Submitted</span
             >
-          </router-link>
           </div>
           <div class="w-1/8 px-4">
             <router-link to="shipment/shipment-list-picking">
               <span
-                class="text-center block my-4 p-3 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
+                class="text-center block my-4 p-3  text-white bg-red-800 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
                 >Picking Up</span
               ></router-link
             >
           </div>
           <div class="w-1/8 px-4">
-            <router-link to="shipment/shipment-list-picked">
             <span
               class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
               >Picked Up</span
             >
-            </router-link>
           </div>
           <div class="w-1/8 px-4">
-            <router-link to="shipment/shipment-list-arrived-hub">
             <span
               class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
               >Arrived Hub</span
             >
-          </router-link>
           </div>
           <div class="w-1/8 px-4">
-            <router-link to="shipment/shipment-list-sorted">
+            <router-link to="/shipment/shipment-list-sorted">
               <span
                 class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
                 >Sorted</span
@@ -164,7 +158,7 @@ const formatTime = (dateString) => {
             >
           </div>
           <div class="w-1/8 px-4">
-            <router-link to="shipment/shipment-list-out-for-delivery">
+            <router-link to="/shipment/shipment-list-sort">
               <span
                 class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
                 >Our For Delivery</span
@@ -172,7 +166,6 @@ const formatTime = (dateString) => {
             >
           </div>
           <div class="w-1/8 px-4">
-            <router-link to="shipment/shipment-list-delivered"></router-link>
             <span
               class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
               >Delivered</span

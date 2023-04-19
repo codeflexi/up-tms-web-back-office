@@ -6,9 +6,11 @@ import ListShipmentView from '../views/shipment/ListShipmentView.vue'
 import ViewShipmentView from '../views/shipment/ViewShipmentView.vue'
 import UploadShipmentFileView from '../views/shipment/UploadShipmentFileView.vue'
 
-import ListShipmentView_Picking from '../views/shipment/ListShipmentView_Picking.vue'
-import ListShipmentView_Sort from '../views/shipment/ListShipmentView_Sort.vue'
+import ListShipmentViewPicking from '../views/shipment/ListShipmentViewPicking.vue'
+import ListShipmentViewSort from '../views/shipment/ListShipmentViewSort.vue'
 import ViewShipmentTrackingView from '../views/shipment/ViewShipmentTrackingView.vue'
+import ListShipmentViewSubmit from '../views/shipment/ListShipmentViewSubmit.vue'
+import ListShipmentViewPick from '../views/shipment/ListShipmentViewPick.vue'
 
 
 
@@ -79,16 +81,25 @@ const routes = [
       },
       {
         path: 'shipment-list-picking',
-        component: ListShipmentView_Picking
+        component: ListShipmentViewPicking
       },
       {
         path: 'upload',
         component: UploadShipmentFileView
       },
       {
-        path: 'shipment-list-sort',
-        component: ListShipmentView_Sort
+        path: 'shipment-list-sorted',
+        component: ListShipmentViewSort
       },
+      {
+        path: 'shipment-list-picked',
+        component: ListShipmentViewPick
+      },
+      {
+        path: 'shipment-list-submitted',
+        component: ListShipmentViewSubmit
+      },
+      
       {
         path: 'shipment-detail/:id',
         component: ViewShipmentView
