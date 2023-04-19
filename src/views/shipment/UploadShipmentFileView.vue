@@ -46,7 +46,7 @@
                 {{ item.name }}
               </option>
             </select>
-            <p>Selected value: {{ form_input.selectCompany }}</p>
+        
           </div>
 
           <div class="ml-2 mt-1">
@@ -186,6 +186,7 @@ onMounted(() => {
 const onSelectChange = (e) => {
   //alert(form_input.value.selectCompany);
 };
+
 const uploadExcelFile = (event) => {
   const file = event.target.files[0];
   const reader = new FileReader();
@@ -315,18 +316,20 @@ const transFormData = () => {
     }
   }
 
-   alert(JSON.stringify(transformedDataLog));
+   //alert(JSON.stringify(transformedDataLog));
   handleUpload(transformedData,transformedDataLog);
 };
 
 const handleUpload = async (data,datalog) => {
+    const title = `Do you want to upload this data? total records are ${data.length}`
+    
   try {
     Swal.fire({
-      title: "Do you want to upload this data?",
+      title: title,
       showDenyButton: true,
       showCancelButton: true,
-      confirmButtonText: "Save",
-      denyButtonText: `Don't save`,
+      confirmButtonText: "Upload",
+      denyButtonText: `Don't upload`,
     }).then(async (result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {

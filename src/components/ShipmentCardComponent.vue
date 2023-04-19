@@ -35,26 +35,39 @@
           'status'
     ])
 
+
+    // 'DATA SUBMITTED',
+    //         'PICKING UP',
+    //         'PICKED UP',
+    //         'ARRIVED HUB',
+    //         'SORTED',
+    //         'TRANSIT',
+    //         'ARRIVED DC',
+    //         'OUT FOR DELIVERY',
+    //         'DELIVERED'
+
     // Computed Properties
 const statusClass = computed(() => {
     if (status === 'DATA SUBMITTED') {
         return 'bg-yellow-200 text-gray-1000 p-3'
-      } else if (status === 'DATA RECEIVED') {
+      } else if (status === 'PICKING UP') {
         return 'bg-red-500 text-white p-3'
-      } 
-     else if (status === 'DATA RECEIVED') {
-        return 'bg-red-500 text-white p-3'
-      }else if (status === 'PICKING') {
-        return 'bg-green-500 text-black p-3'
-    }else if (status === 'PICKED UP') {
-        return 'bg-green-500 text-black p-3'
-      }else if (status === 'ARRIVALED DC') {
-        return 'bg-green-500 text-black p-3'
+      }
+      else if (status === 'PICKED UP') {
+        return 'bg-gray-600 text-white p-3'
+      }else if (status === 'ARRIVED HUB') {
+        return 'bg-orange-500 text-black p-3'
       }else if (status === 'SORTED') {
-        return 'bg-green-500 text-black p-3'
-      }else if (status === 'ARRIVALED HUB') {
-        return 'bg-green-500 text-black p-3'
-      }else if (status === 'SHIPPED') {
+        return 'bg-blue-500 text-white p-3'
+      }else if (status === 'TRANSIT') {
+        return 'bg-yellow-500 text-black p-3'
+      }else if (status === 'ARRIVED DC') {
+        return 'bg-blue-900 text-white p-3'
+      }
+    else if (status === 'OUT FOR DELIVERY') {
+        return 'bg-orange-500 text-black p-3'
+      }
+      else if (status === 'DELIVERED') {
         return 'bg-green-500 text-black p-3'
       }
       else {

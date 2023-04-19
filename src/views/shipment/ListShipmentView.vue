@@ -3,6 +3,7 @@ import axios from "axios";
 import { ref, watch, onMounted } from "vue";
 import { useUserStore } from "@/stores/user-store";
 import { useProfileStore } from "@/stores/profile-store";
+import { useGlobalStore } from "@/stores/global-store";
 import { useRoute } from "vue-router";
 import VPagination from "@hennge/vue3-pagination";
 import "@hennge/vue3-pagination/dist/vue3-pagination.css";
@@ -11,31 +12,77 @@ import Card from "@/components/ShipmentCardComponent.vue";
 
 const shipments = ref({});
 let page = ref(1);
+let company = ref("All");
 let pageCount = ref(null);
 let total = ref(null);
 
 const route = useRoute();
 const userStore = useUserStore();
 const profileStore = useProfileStore();
+const globalStore = useGlobalStore();
 
-onMounted(async () => {
+const form_input = ref({
+  selectCompany: "",
+  waybillNumber: "",
+  shipmentNumber: ""
+});
+
+onMounted(() => {
   // const response = await axios.get('/api/v1/shipments?limit=5');
   // pageCount.value = response.data.count;
   // shipments.value  = response.data;
-  await getShipments();
+  globalStore.fetchCompany();
+  getShipments();
 });
 
 watch(page, async () => {
-  //    const res = await axios.get(`/api/v1/shipments?limit=5&page=${page.value}`)
-  //    pageCount.value = response.data.count;
-  //    shipments.value = res.data;
   await getShipments();
 });
 
+watch(company, async () => {
+  page.value = 1;
+  await getShipments();
+
+});
+
+const onSelectChange = (e) => {
+  company.value = form_input.value.selectCompany;
+};
+
+const submitKey = async (e) => {
+  if (form_input.value.waybillNumber.length > 0) {
+    page.value = 1;
+    await getShipments()
+  }
+  if (form_input.value.shipmentNumber.length > 0) {
+    page.value = 1;
+    await getShipments()
+  }
+};
+
 const getShipments = async () => {
   try {
-    const res = await axios.get(`/api/v1/shipments?limit=5&page=${page.value}`);
-    pageCount.value = Math.ceil(res.data.total / 10);
+    //alert(form_input.value.selectCompany)
+    const filter = 
+      form_input.value.selectCompany === ""
+        ? ""
+        : `&company=${form_input.value.selectCompany}`;
+
+    const filter1 =  
+    form_input.value.waybillNumber === ""
+    ?""
+    : `&waybill_number=${form_input.value.waybillNumber}`;
+
+    const filter2 =  
+    form_input.value.shipmentNumber === ""
+    ?""
+    : `&shipment_number=${form_input.value.shipmentNumber}`;
+
+
+    const res = await axios.get(
+      `/api/v1/shipments?limit=25&page=${page.value}${filter}${filter1}${filter2}`
+    );
+    pageCount.value = Math.ceil(res.data.total / 25);
     total.value = res.data.total;
     shipments.value = res.data;
   } catch (err) {
@@ -49,10 +96,9 @@ const formatDate = (dateString) => {
 };
 
 const formatTime = (dateString) => {
-    
   const event = new Date(dateString);
   //MMM D HH:mm
-  return moment(dateString).format("HH:mm")
+  return moment(dateString).format("HH:mm");
   //return event.toLocaleTimeString("en-TH").toString();
 };
 </script>
@@ -67,48 +113,88 @@ const formatTime = (dateString) => {
     <!-- Search -->
     <div class="p-1 text-gray-900">
       <div class="container px-4 mx-auto bg-slate-100">
-        <div class="flex flex-wrap">
-          <div class="w-1/6 px-4">
+        <h1>ค้นหา Shipement โดย  : </h1>
+        <div class="flex flex-wrap text-xs">
+          <div class="w-1/8 px-4">
             <span
-              class="text-sm text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100 hover:bg-red-800 hover:text-white"
+              class="text-center block my-4 p-3 text-white bg-red-800 rounded border border-solid border-red-900 hover:bg-red-800 hover:text-white"
               >All</span
             >
           </div>
-          <div class="w-1/6 px-4">
+          <div class="w-1/8 px-4">
             <span
-              class="text-sm text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100  hover:bg-red-800 hover:text-white"
+              class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
               >Submitted</span
             >
           </div>
-          <div class="w-1/6 px-4">
+          <div class="w-1/8 px-4">
             <router-link to="shipment/shipment-list-picking">
-            <span
-              class="text-sm text-center block my-4 p-3  rounded border border-solid border-blueGray-100  hover:bg-red-800 hover:text-white"
-              >Picking Up</span
-            ></router-link> 
+              <span
+                class="text-center block my-4 p-3 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
+                >Picking Up</span
+              ></router-link
+            >
           </div>
-          <div class="w-1/6 px-4">
+          <div class="w-1/8 px-4">
             <span
-              class="text-sm text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100  hover:bg-red-800 hover:text-white"
+              class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
               >Picked Up</span
             >
           </div>
-          <div class="w-1/6 px-4">
-            <router-link to="shipment/shipment-list-sort">
+          <div class="w-1/8 px-4">
             <span
-              class="text-sm text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100  hover:bg-red-800 hover:text-white"
-              >Sorted</span
-            ></router-link> 
+              class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
+              >Arrived Hub</span
+            >
           </div>
-          <div class="w-1/6 px-4">
+          <div class="w-1/8 px-4">
+            <router-link to="shipment/shipment-list-sort">
+              <span
+                class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
+                >Sorted</span
+              ></router-link
+            >
+          </div>
+          <div class="w-1/8 px-4">
+            <router-link to="shipment/shipment-list-sort">
+              <span
+                class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
+                >Our For Delivery</span
+              ></router-link
+            >
+          </div>
+          <div class="w-1/8 px-4">
             <span
-              class="text-sm text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-blueGray-100  hover:bg-red-800 hover:text-white"
+              class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
               >Delivered</span
             >
           </div>
         </div>
+        <div id="dropdown_comapany">
+          <label for="countries" class="block mb-2 text-xm font-bold  text-gray-900 dark:text-white">Select your company :</label>
+          <select  class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500" 
+            name="company-selection"
+            @change="onSelectChange(e)"
+            v-model="form_input.selectCompany"
+          >
+            <option
+              v-for="item in globalStore.getCompany.data"
+              :value="item._id"
+              :key="item._id"
+            >
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+        <div class=" mt-2">
+          <label for="waybillNumber" class="block mb-2 text-xs font-medium text-gray-900 dark:text-white"></label>
+          <input  v-model.lazy="form_input.waybillNumber"  v-on:keyup.enter="submitKey" id="form_input.waybillNumber" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500 dark:shadow-sm-light" placeholder="Waybill Number">
+        </div>
+        <div class="mb-2 mt-2">
+          <label for="shipmentNumber" class="block mb-2 text-xs font-medium text-gray-900 dark:text-white"></label>
+          <input  v-model.lazy="form_input.shipmentNumber"  v-on:keyup.enter="submitKey" id="form_input.shipmentNumber" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500 dark:shadow-sm-light" placeholder="Shipment Number">
+        </div>
       </div>
-  
     </div>
     <!-- Content Header -->
     <div class="p-1 text-gray-900 bg-gray-100">
@@ -138,11 +224,18 @@ const formatTime = (dateString) => {
             :ship_to_name="ship.shipping_full_name"
             :ship_to_province="ship.city + ' ' + ship.state"
             :ship_from_name="ship.warehouse?.name"
-            :ship_from_province="ship.warehouse?.city + ' ' +  ship.warehouse?.state"
+            :ship_from_province="
+              ship.warehouse?.city + ' ' + ship.warehouse?.state
+            "
             :item_type="ship.cargo_info.item_type"
             :weight="ship.cargo_info.weight"
-            :dimension="ship.cargo_info.lengths + '*' + ship.cargo_info.width +
-              '*' + ship.cargo_info.height"
+            :dimension="
+              ship.cargo_info.lengths +
+              '*' +
+              ship.cargo_info.width +
+              '*' +
+              ship.cargo_info.height
+            "
             :cod_amount="ship.cargo_info.cod_amount"
             :shipment_fee="ship.cargo_info.cod_amount"
             :picked_up_date="
@@ -151,7 +244,10 @@ const formatTime = (dateString) => {
             :status="ship.status"
           >
             <!-- Card Slot -->
-            <p><span class="  ml-2 text-xs"> isCOD? : </span>{{ ship.cargo_info.iscod }}</p>
+            <p>
+              <span class="ml-2 text-xs"> isCOD? : </span
+              >{{ ship.cargo_info.iscod }} ByPass : {{ ship.is_by_pass }}
+            </p>
           </Card>
         </div>
       </div>
