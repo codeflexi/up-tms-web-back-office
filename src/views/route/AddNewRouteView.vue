@@ -136,9 +136,8 @@
 <script setup>
 import { defineProps , ref , onMounted } from "vue";
 import { useRouteStore } from '@/stores/route-store'
-import TextInput from '@/components/shares/Textinput.vue'
+//import TextInput from '@/components/shares/Textinput.vue'
 const emit = defineEmits(["close","refresh"]);
-
 const routeStore = useRouteStore()
 
 
