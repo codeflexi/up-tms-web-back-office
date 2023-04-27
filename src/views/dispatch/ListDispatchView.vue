@@ -72,7 +72,7 @@ import { onMounted, ref, watch } from "vue";
 import VPagination from "@hennge/vue3-pagination";
 import ShipmentRow from "@/components/ShipmentRow.vue";
 import IconComponent from "@/components/IconComponent.vue";
-import Modal from "@/views/pickup/AddPickupView.vue";
+import Modal from "@/views/dispatch/AddDispatchView.vue";
 
 import "@hennge/vue3-pagination/dist/vue3-pagination.css";
 
@@ -115,7 +115,7 @@ watch(status, async () => {
 const getShipments = async () => {
   try {
     const res = await axios.get(
-      `/api/v1/shipments?status=DATA SUBMITTED&limit=25&page=${page.value}`
+      `/api/v1/shipments?status=ARRIVED HUB&limit=25&page=${page.value}`
     );
     pageCount.value = Math.ceil(res.data.total / 25);
     total.value = res.data.count;

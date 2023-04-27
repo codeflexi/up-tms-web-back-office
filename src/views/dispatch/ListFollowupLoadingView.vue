@@ -1,5 +1,5 @@
 <script setup>
-import { useSortStore } from "@/stores/sort-store";
+import { useRouteStore } from "@/stores/route-store";
 import { ref, onMounted, watch } from "vue";
 import Dropdown from "@/components/DropdownComponent.vue";
 import Modal from "@/views/route/AddNewRouteView.vue";
@@ -7,8 +7,9 @@ import IconComponent from "@/components/IconComponent.vue";
 import VPagination from "@hennge/vue3-pagination";
 import "@hennge/vue3-pagination/dist/vue3-pagination.css";
 import moment from "moment";
+import axios from "axios";
 
-const sortStore = useSortStore();
+const routeStore = useRouteStore();
 
 const user_input = ref({
   name: "",
@@ -17,7 +18,7 @@ const user_input = ref({
 
 const sort = ref(false);
 
-const shipments = ref({});
+const pickings = ref({});
 let page = ref(1);
 let pageCount = ref(0);
 let total = ref(0);
@@ -26,80 +27,85 @@ const modalActive = ref(false);
 const selectedValue = ref("");
 const isrefresh = ref("");
 
-const onSelectChange = (e) => {
-  selectedValue.value = e.target.value;
-};
-
 const toggleModal = () => {
   modalActive.value = !modalActive.value;
 };
 
 onMounted(async () => {
-  // userStore.getEmailsByEmailAddress()
-
-  fechShipmentSorts();
+  getPickings()
+ // fechShipmentRoutes();
 });
 
 watch(isrefresh, () => {
   console.log(isrefresh);
-  fechShipmentSorts();
+  getPickings()
+ // fechShipmentRoutes();
 });
 
 watch(page, async () => {
-  fechShipmentSorts();
+  getPickings()
+  //fechShipmentRoutes();
 });
 
-const fechShipmentSorts = async () => {
-  await sortStore.fetchShipmentSorts(page.value);
-  pageCount.value = Math.ceil(sortStore.getShipmentSorts.total / 25);
-  total.value = sortStore.getShipmentSorts.total;
-};
-
-const CreateUser = () => {
-  if (!user_input.value.name.trim() || !user_input.value.email.trim()) {
-    return alert("Please enter a name and email");
+const getPickings = async () => {
+  try {
+    const res = await axios.get(
+      `/api/v1/shipment-dispatchs?status=CREATED&sort=-planned_date&limit=25&page=${page.value}`
+    );
+    pageCount.value = Math.ceil(res.data.total / 25);
+    total.value = res.data.count;
+    pickings.value = res.data;
+  } catch (err) {
+    console.log(err);
   }
-  sortStore.create(user_input.value);
-
-  user_input.value = {
-    name: "",
-    email: "",
-  };
 };
+
+const fechShipmentRoutes = async () => {
+  await routeStore.fetchShipmentRoutes(page.value);
+  pageCount.value = Math.ceil(routeStore.getShipmentRoutes.total / 25);
+  total.value = routeStore.getShipmentRoutes.total;
+};
+
+
 </script>
 
 <template>
   <div
     id="SingleMessageSection"
-    class="w-full bg-gray-100 ml-2 rounded-t-xl h-full shadow-sm overflow-y-scroll"
+    class="w-full bg-white ml-2 rounded-t-xl h-full shadow-sm overflow-y-scroll"
   >
-    <div class="border-b bg-white">
+    <div class="border-b">
       <div class="flex items-center justify-between px-1.5 py-0.5">
         <div class="flex">
-          <!-- add-new -->
-
-          <router-link to="/sort/add-new" active-class="active">
-            <div
-              class="py-2 focus:outline-none text-red-600 rounded mt-4 flex items-center"
+          <button
+            @click="toggleModal"
+            type="button"
+            class="py-2 focus:outline-none text-red-600 rounded mt-4 flex items-center"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              class="w-6 stroke-current mr-2"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                class="w-6 stroke-current mr-2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                />
-              </svg>
-              Add another Sort
-            </div>
-          </router-link>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              />
+            </svg>
+            COMPLEATED
+          </button>
+
+          <Modal
+            @close="toggleModal"
+            @refresh="isrefresh = $event"
+            :modalActive="modalActive"
+          >
+          </Modal>
         </div>
-        <div class="text-xs text-gray-500">Sort Details</div>
+        <div class="text-xs text-gray-500">Delivery Details</div>
       </div>
     </div>
 
@@ -113,31 +119,41 @@ const CreateUser = () => {
           :pages="pageCount"
           :range-size="5"
           active-color="#DCEDFF"
-          @update:modelValue="sortStore.fetchShipmentSorts(page)"
+          @update:modelValue="routeStore.fetchShipmentRoutes(page)"
         />
       </div>
     </div>
 
-    <div class="mt-2 ml-10 bg-gray-100">
+    <div class="mt-2 ml-10">
       <div class="users grid md:grid-cols-3">
         <div
-          v-for="sort in sortStore.getShipmentSorts.data"
+          v-for="pick in pickings?.data"
           class="user w-fit box-border border"
         >
-          <router-link :to="`/sort/sort-detail/${sort._id}`">
-            <div>Sort Number: {{ sort.sort_number }}</div>
+          <router-link :to="`/dispatch/load-detail/${pick._id}`">
             <div>
-              Deliver Date: {{ moment(sort.sorted_date).format("MMM D HH:mm") }}
+              <h2>Loading#: {{ pick.dispatch_number }}</h2>
+          
             </div>
+            <div class=" px-2 py-2 bg-blue-900 rounded-lg  text-white">
+              <h3><b> Loading Date:</b>
+                {{ moment(pick.planned_date).format("MMM D HH:mm") }}</h3>
             <h3 class="text-lg">
-              {{ sort.route?.name }} - {{ sort.route?.description }}
+              <b> คนขับ:</b>
+              {{ pick.driver?.name }} {{ pick.driver?.last_name }}</h3>
+            <h3 class="text-lg">
+              <b> รถ:</b>
+              {{ pick.vehicle?.type }} - {{ pick.vehicle?.plate_number }} {{ pick.vehicle?.plate_province }}
             </h3>
 
-            <h2 class="text-sm">{{ sort?.status }}</h2>
-            <h4 class="text-xs">{{ sort.user?.name }}</h4>
+          </div>
+          <h2>FROM: {{pick.company?.name}}</h2>
+          <h2>WH: {{pick.warehouse?.name}}</h2>
+            <p><span><b> Details: </b></span>{{ pick.memo }}</p>
             <p class="text-end text-xs">
-              <span>#of Shipments:</span> {{ sort.shipment_ids.length }}
+              <span>#of Shipments:</span> {{ pick.shipment_ids.length }}
             </p>
+         
           </router-link>
         </div>
       </div>
@@ -152,17 +168,28 @@ const CreateUser = () => {
   box-sizing: border-box;
 }
 
+body {
+  background-color: #eee;
+}
+
 main {
   padding: 1.5rem;
 }
 
 h1 {
-  color: #aaa;
+  color: #100f0f;
   font-weight: 900;
   line-height: 1;
   text-transform: uppercase;
   margin-bottom: 1.5rem;
 }
+h2 {
+  color: #746f6f;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
 
 form {
   display: block;
@@ -253,7 +280,7 @@ label input {
 }
 
 .user:hover h3 {
-  color: crimson;
+  color: rgb(244, 241, 242);
 }
 
 .user:last-of-type {

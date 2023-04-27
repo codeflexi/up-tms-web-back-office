@@ -84,7 +84,20 @@
           >
             <div class="flex items-center">
               <WarehouseIcon :size="24" />
-              <div class="text-sm pl-4 font-semibold">PICK UP</div>
+              <div class="text-sm pl-4 font-semibold">ASSIGN PICKUP</div>
+            </div>
+          </div>
+        </router-link>
+
+        <router-link to="/pickup/follow-up">
+          <div
+            class="flex side-menu-item justify-between px-6 py-1.5  hover:bg-red-800 hover:text-white  rounded-r-full "
+            v-bind:class="{ 'bg-indigo-500': active === 'PICK-FOLLOW-UP' }"
+            @click="setActive('PICK-FOLLOW-UP')"
+          >
+            <div class="flex items-center">
+              <WarehouseIcon :size="24" />
+              <div class="text-sm pl-4 font-semibold">FOLLOW-UP PICKUP</div>
             </div>
           </div>
         </router-link>
@@ -111,6 +124,32 @@
             <div class="flex items-center">
               <RobotIcon :size="24" />
               <div class="text-sm pl-4">SORT</div>
+            </div>
+          </div>
+        </router-link>
+
+        <router-link to="/dispatch">
+          <div
+            class="flex side-menu-item justify-between px-6 py-1.5 hover:bg-red-800 hover:text-white rounded-r-full"
+            v-bind:class="{ 'bg-indigo-500': active === 'LOADING' }"
+            @click="setActive('LOADING')"
+          >
+            <div class="flex items-center">
+              <RobotIcon :size="24" />
+              <div class="text-sm pl-4">ASSIGN LOADING</div>
+            </div>
+          </div>
+        </router-link>
+
+        <router-link to="/dispatch/follow-up">
+          <div
+            class="flex side-menu-item justify-between px-6 py-1.5  hover:bg-red-800 hover:text-white  rounded-r-full "
+            v-bind:class="{ 'bg-indigo-500': active === 'LOAD-FOLLOW-UP' }"
+            @click="setActive('LOAD-FOLLOW-UP')"
+          >
+            <div class="flex items-center">
+              <WarehouseIcon :size="24" />
+              <div class="text-sm pl-4 font-semibold">FOLLOW-UP LOADING</div>
             </div>
           </div>
         </router-link>
@@ -161,19 +200,19 @@
 
       <div class="m-4">
         <div class="w-6 h-6 flex justify-center mb-7">
-          <img class="object-center" src="img/GoogleCalendar.png" alt="" />
+        
         </div>
 
         <div class="w-6 h-6 flex justify-center mb-7">
-          <img class="object-center" src="img/GoogleKeep.png" alt="" />
+         
         </div>
 
         <div class="w-6 h-6 flex justify-center mb-7">
-          <img class="object-center" src="img/GoogleTasks.png" alt="" />
+          
         </div>
 
         <div class="w-6 h-6 flex justify-center mb-7">
-          <img class="object-center" src="img/GoogleContacts.png" alt="" />
+          <!-- <img class="object-center" src="img/GoogleContacts.png" alt="" /> -->
         </div>
 
         <div class="w-6 flex mb-7 border border-gray-300" />
@@ -248,21 +287,13 @@ import { ref, toRefs } from "vue";
 import IconComponent from "@/components/IconComponent.vue";
 import UserComponent from "@/components/UserComponent.vue";
 
-import PencilOutlineIcon from "vue-material-design-icons/PencilOutline.vue";
+
 import WarehouseIcon from "vue-material-design-icons/Warehouse.vue";
 import TruckOutline from "vue-material-design-icons/TruckOutline.vue";
-import StarOutlineIcon from "vue-material-design-icons/StarOutline.vue";
 import RobotIcon from "vue-material-design-icons/RobotIndustrialOutline.vue";
 import BoxIcon from "vue-material-design-icons/ArchiveOutline.vue";
 import ReceiveIcon from "vue-material-design-icons/HandCoinOutline.vue";
 
-
-
-
-
-import ClockOutlineIcon from "vue-material-design-icons/ClockOutline.vue";
-import SendOutlineIcon from "vue-material-design-icons/SendOutline.vue";
-import FileOutlineIcon from "vue-material-design-icons/FileOutline.vue";
 import PlusIcon from "vue-material-design-icons/Plus.vue";
 import CloseIcon from "vue-material-design-icons/Close.vue";
 import CubeScanIcon from 'vue-material-design-icons/CubeScan.vue';
@@ -281,6 +312,7 @@ let isNavbar = ref(true);
 let toEmail = ref("");
 let subject = ref("");
 let body = ref("");
+let active = ref("");
 
 const sendEmail = async () => {
   // eslint-disable-next-line no-useless-escape
@@ -305,6 +337,7 @@ const sendEmail = async () => {
 };
 
 const setActive = async (name) => {
+  active.value = name ;
   await globalStore.setMenuActive(name);
 };
 

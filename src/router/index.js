@@ -4,13 +4,16 @@ import EmailView from '../views/template/EmailView.vue'
 import ListPickupView from '../views/pickup/ListPickupView.vue'
 import ListShipmentView from '../views/shipment/ListShipmentView.vue'
 import ViewShipmentView from '../views/shipment/ViewShipmentView.vue'
+import ViewPickupView from '../views/pickup/ViewPickupView.vue'
 import UploadShipmentFileView from '../views/shipment/UploadShipmentFileView.vue'
-
 import ListShipmentViewPicking from '../views/shipment/ListShipmentViewPicking.vue'
 import ListShipmentViewSort from '../views/shipment/ListShipmentViewSort.vue'
 import ViewShipmentTrackingView from '../views/shipment/ViewShipmentTrackingView.vue'
 import ListShipmentViewSubmit from '../views/shipment/ListShipmentViewSubmit.vue'
 import ListShipmentViewPick from '../views/shipment/ListShipmentViewPick.vue'
+import ListFollowupPickupView from '../views/pickup/ListFollowupPickupView.vue'
+import ListFollowupLoadingView from '../views/dispatch/ListFollowupLoadingView.vue'
+import ViewLoadingView from '../views/dispatch/ViewLoadingView.vue'
 
 
 
@@ -19,6 +22,7 @@ import AddRouteView from '../views/route/AddRouteView.vue'
 import AddNewRouteView from '../views/route/AddNewRouteView.vue'
 import ListRouteView from '../views/route/ListRouteView.vue'
 import ListSortView from '../views/sort/ListSortView.vue'
+import ListDispatchView from '../views/dispatch/ListDispatchView.vue'
 import AddNewSortView from '../views/sort/AddNewSortView.vue'
 import ViewSortView from '../views/sort/ViewSortView.vue'
 import MessageView from '../views/pickup/MessageView.vue'
@@ -44,12 +48,47 @@ const routes = [
         component: ListPickupView
       },
       {
+        path: 'follow-up',
+        component: ListFollowupPickupView
+      },
+      {
+        path: 'pickup-detail/:id',
+        component: ViewPickupView
+      },
+      
+      
+      {
         path: 'shipment-detail/:id',
         component: ViewShipmentView
       }
     ]
   }
   ,
+  {
+    path: '/dispatch',
+    beforeEnter: (to, from, next) => {
+      useUserStore().email ? next() : next('/')
+    },
+    component: EmailView,
+    children: [
+      {
+        path: '',
+        component: ListDispatchView
+      },
+      {
+        path: 'follow-up',
+        component: ListFollowupLoadingView
+      },
+      {
+        path: 'load-detail/:id',
+        component: ViewLoadingView
+      },
+      {
+        path: 'shipment-detail/:id',
+        component: ViewShipmentView
+      }
+    ]
+  },
   {
     path: '/receive',
     beforeEnter: (to, from, next) => {
@@ -66,8 +105,8 @@ const routes = [
         component: MessageView
       }
     ]
-  }
-  ,
+  },
+
   {
     path: '/shipment',
     beforeEnter: (to, from, next) => {

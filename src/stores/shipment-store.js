@@ -8,7 +8,7 @@ import axios from "axios"
 export const useShipmentStore = defineStore("shipment", {
   state: () => ({
     shipments: [],
-    shipment_logs:[],
+    shipment_logs: [],
     shipments_id: [],
     cargo_info: [],
     shipment_items: []
@@ -34,7 +34,7 @@ export const useShipmentStore = defineStore("shipment", {
 
   },
   actions: {
-  
+
     async fetchShipmentById(id) {
       try {
 
@@ -53,7 +53,7 @@ export const useShipmentStore = defineStore("shipment", {
       try {
 
         let apiURL = `/api/v1/shipments/${id}/shipmentlogs`;
-       // api/v1/shipments/63fad9485f7d13a3c2f33b6d/shipmentlogs
+        // api/v1/shipments/63fad9485f7d13a3c2f33b6d/shipmentlogs
         const data = await axios.get(apiURL)
         this.$state.shipment_logs = data.data
       }
@@ -75,7 +75,7 @@ export const useShipmentStore = defineStore("shipment", {
         console.log(error)
       }
     },
-      async handleCreatePickUp(data) {
+    async handleCreatePickUp(data) {
       try {
         const res = await axios.post("/api/v1/shipment-picks", {
           //driver: "637f31761deb473649f7027b",
@@ -92,21 +92,39 @@ export const useShipmentStore = defineStore("shipment", {
         console.log(error);
       }
     },
-    async handleCreateReceiving(id,data) {
+    async handleCreateDispatch(data) {
+      try {
+        //console.log('Post Dispatch')
+        const res = await axios.post("/api/v1/shipment-dispatchs", {
+          //driver: "637f31761deb473649f7027b",
+          company: data.company,
+          memo: data.memo,
+          planned_date: data.pickupDate,
+          vehicle: data.vehicle,
+          shipment_ids: data.shipmentId,
+          warehouse: data.warehouse,
+        });
+        // this.authUser = response.data;
+        this.router.push('/dispatch')
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async handleCreateReceiving(id, data) {
       try {
         console.log(data.weight)
         let apiURL = `/api/v1/shipments/${id}`;
         const res = await axios.put(apiURL, {
-          status:'ARRIVED HUB',
-          updated_date:Date.now(),
+          status: 'ARRIVED HUB',
+          updated_date: Date.now(),
           cargo_info: {
             weight: data.weight,
-            lengths:data.l,
-            width:data.w,
-            height:data.h,
-            iscod: data.cod_amount>0?"Y":"N",
+            lengths: data.l,
+            width: data.w,
+            height: data.h,
+            iscod: data.cod_amount > 0 ? "Y" : "N",
             cod_amount: data.cod_amount,
-        },
+          },
         });
         Swal.fire(
           "Update Data succesfully!",

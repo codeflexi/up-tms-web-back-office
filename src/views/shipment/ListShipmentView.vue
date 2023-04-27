@@ -114,8 +114,8 @@ const formatTime = (dateString) => {
     <div class="p-1 text-gray-900">
       <div class="container px-4 mx-auto bg-slate-100">
         <h1>ค้นหา Shipement โดย  : </h1>
-        <div class="flex flex-wrap text-xs">
-          <div class="w-1/8 px-4">
+        <div class="flex  justify-between text-xs">
+          <div class="w-1/9 px-4">
             <router-link to="/">
             <span
               class="text-center block my-4 p-3 text-white bg-red-800 rounded border border-solid border-red-900 hover:bg-red-800 hover:text-white"
@@ -123,7 +123,7 @@ const formatTime = (dateString) => {
             >
           </router-link>
           </div>
-          <div class="w-1/8 px-4">
+          <div class="w-1/9 px-4">
             <router-link to="shipment/shipment-list-submitted">
             <span
               class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
@@ -131,7 +131,7 @@ const formatTime = (dateString) => {
             >
           </router-link>
           </div>
-          <div class="w-1/8 px-4">
+          <div class="w-1/9 px-4">
             <router-link to="shipment/shipment-list-picking">
               <span
                 class="text-center block my-4 p-3 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
@@ -139,7 +139,7 @@ const formatTime = (dateString) => {
               ></router-link
             >
           </div>
-          <div class="w-1/8 px-4">
+          <div class="w-1/9 px-4">
             <router-link to="shipment/shipment-list-picked">
             <span
               class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
@@ -147,7 +147,7 @@ const formatTime = (dateString) => {
             >
             </router-link>
           </div>
-          <div class="w-1/8 px-4">
+          <div class="w-1/9 px-4">
             <router-link to="shipment/shipment-list-arrived-hub">
             <span
               class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
@@ -155,7 +155,7 @@ const formatTime = (dateString) => {
             >
           </router-link>
           </div>
-          <div class="w-1/8 px-4">
+          <div class="w-1/9 px-4">
             <router-link to="shipment/shipment-list-sorted">
               <span
                 class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
@@ -163,7 +163,15 @@ const formatTime = (dateString) => {
               ></router-link
             >
           </div>
-          <div class="w-1/8 px-4">
+          <div class="w-1/9 px-4">
+            <router-link to="shipment/shipment-list-dispaching">
+              <span
+                class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
+                >Dispatching</span
+              ></router-link
+            >
+          </div>
+          <div class="w-1/9 px-4">
             <router-link to="shipment/shipment-list-out-for-delivery">
               <span
                 class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
@@ -171,7 +179,7 @@ const formatTime = (dateString) => {
               ></router-link
             >
           </div>
-          <div class="w-1/8 px-4">
+          <div class="w-1/9 px-4">
             <router-link to="shipment/shipment-list-delivered"></router-link>
             <span
               class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"

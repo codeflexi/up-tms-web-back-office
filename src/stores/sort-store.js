@@ -36,7 +36,7 @@ export const useSortStore = defineStore("sort", {
     async fetchShipmentSorts(page) {
       try {
 
-        let apiURL = `/api/v1/shipment-sorts?limit=12&page=${page}`;
+        let apiURL = `/api/v1/shipment-sorts?limit=25&page=${page}`;
         const data = await axios.get(apiURL)
         this.$state.sorts = data.data
 

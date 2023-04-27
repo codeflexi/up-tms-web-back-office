@@ -9,7 +9,7 @@ const shipmentStore = useShipmentStore();
 
 onMounted(async () => {
     await shipmentStore.fetchShipmentLogs(route.params.id)
-    console.log(route.params.id)
+    await shipmentStore.fetchShipmentById(route.params.id)
 });
 
 
@@ -77,9 +77,38 @@ onMounted(async () => {
                     class="bg-gray-100 text-gray-800 text-xs font-normal mr-2 px-2.5 py-0.5 rounded dark:bg-gray-600 dark:text-gray-300"
                     >{{ log.ref_number }}</span
                   >
+
+                  
                 </div>
-                
               </div>
+              <div  v-if="log.event === 'OUT FOR DELIVERY'" class=" flex p-3 text-xs italic font-normal text-gray-500 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300">
+                <a :href="shipmentStore.getShipments.data.loaded_info?.photo">
+                  <img class="rounded-lg" width="200" :src="shipmentStore.getShipments.data.loaded_info?.photo" alt="image description">
+                </a>
+                <a :href="shipmentStore.getShipments.data.loaded_info?.signature">
+                  <img class="rounded-lg ml-6 " width="200" :src="shipmentStore.getShipments.data.loaded_info?.signature" alt="description">
+                </a>
+              </div>
+
+              <div  v-if="log.event === 'DELIVERED'" class=" flex p-3 text-xs italic font-normal text-gray-500 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300">
+                <a :href="shipmentStore.getShipments.data.delivered_info?.photo">
+                  <img class="rounded-lg" width="200" :src="shipmentStore.getShipments.data.delivered_info?.photo" alt="image description">
+                </a>
+                <a :href="shipmentStore.getShipments.data.delivered_info?.signature">
+                  <img class="rounded-lg ml-6 " width="200" :src="shipmentStore.getShipments.data.delivered_info?.signature" alt="description">
+                </a>
+              </div>
+
+
+              <div  v-if="log.event === 'PICKED UP'  " class=" flex p-3 text-xs italic font-normal text-gray-500 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300">
+                <a :href="shipmentStore.getShipments.data.picked_up_info?.photo">
+                  <img class="rounded-lg" width="200" :src="shipmentStore.getShipments.data.picked_up_info?.photo" alt="image description">
+                </a>
+                <a :href="shipmentStore.getShipments.data.picked_up_info?.signature">
+                  <img class="rounded-lg ml-6 " width="200" :src="shipmentStore.getShipments.data.picked_up_info?.signature" alt="description">
+                </a>
+              </div>
+
             </li>
            
           </ol>

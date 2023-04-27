@@ -12,8 +12,8 @@
             <div class="px-8 pt-4 pb-4 space-y-6">
               <div class="flex justify-between items-start mb-16">
                 <div>
-                  <h1 class="text-4xl font-bold">Assign Pick up</h1>
-                  <p class="text-gray-600">นัดเวลา เข้ารับของ</p>
+                  <h1 class="text-4xl font-bold">Assign Dispatch</h1>
+                  <p class="text-gray-600">นัดเวลา ส่งของของ</p>
                 </div>
                 <button type="button" class="focus:outline-none" @click="close">
                   <svg
@@ -35,7 +35,7 @@
 
               <div>
                 <label class="mb-1 block" for="title"
-                  >Plan Picking Up Date/Time</label
+                  >Plan Dispatch Up Date/Time</label
                 >
                 <input
                   type="datetime-local"
@@ -58,7 +58,7 @@
                     :value="item._id"
                     :key="item._id"
                   >
-                  {{ item.driver?.name }} {{ item.driver?.last_name }} - {{ item.type }} {{ item.plate_number }} {{ item.plate_province }}
+                  {{ item.driver?.name }} {{ item.driver?.last_name }} - {{ item.type }} {{ item.plate_number }} {{ item.plate_province }} {{ item.type }} {{ item.plate_number }} {{ item.plate_province }}
                   </option>
                 </select>
                 <p>Selected value: {{ form_input.selectedVehicle }}</p>
@@ -217,7 +217,8 @@ const groupedShipments = async () => {
       pickupDate: form_input.value.deliveryDate,
       memo: form_input.value.memo,
     };
-    await shipmentStore.handleCreatePickUp(upload);
+    //console.log('call handleCreate Dispatch')
+    await shipmentStore.handleCreateDispatch(upload);
   }
   return upload;
 };
@@ -235,7 +236,7 @@ const handleSubmittedData = async () => {
       if (result.isConfirmed) {
         groupedShipments();
         Swal.fire("Data was Saved Successfully!", "", "success");
-        window.location.reload();
+       window.location.reload();
       } else if (result.isDenied) {
         Swal.fire("Changes are not saved", "", "info");
       }

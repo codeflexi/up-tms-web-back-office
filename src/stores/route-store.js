@@ -33,7 +33,7 @@ export const useRouteStore = defineStore("route", {
         async fetchShipmentRoutes(page) {
             try {
 
-             let apiURL = `/api/v1/shipment-routes?limit=9&page=${page}`;
+             let apiURL = `/api/v1/shipment-routes?limit=25&page=${page}`;
              const data = await axios.get(apiURL)
               this.$state.routes = data.data
               // this.$state.routefrom = data.data.from_source
