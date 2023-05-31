@@ -334,8 +334,24 @@ const handleUpload = async (data,datalog) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
 
-        const res = await axios.post("/api/v1/shipments/upload", data);
-        const reslog = await axios.post("/api/v1/shipments/log-upload", datalog);
+        try {
+          const res = await axios.post("/api/v1/shipments/upload", data);
+
+        } catch (error) {
+          Swal.fire("Data was not uploaded Successfully!",error.response.data.error, "error");
+          //console.log(error.response.data.error)
+          return
+        }
+        
+        try {
+          const reslog = await axios.post("/api/v1/shipments/log-upload", datalog);
+        } catch (error) {
+          Swal.fire("Data was not uploaded Successfully!",error.response.data.error, "error");
+          //console.log(error.response.data.error)
+          return
+        }
+       
+       // res.error.response.status
 
         Swal.fire("Data was uploaded Successfully!", "", "success");
         router.push("/shipment");
@@ -344,6 +360,8 @@ const handleUpload = async (data,datalog) => {
       }
     });
   } catch (error) {
+    console.log(error.response.data.error)
+   
     // Swal.fire(`Data incorrect - ${error}`, "Please try again!!", "warning");
     swalMessage(
       `Data upload incorrect - ${error}`,

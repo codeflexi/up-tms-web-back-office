@@ -264,8 +264,9 @@ const handleCancelData = async () => {
 
 const addRouting = async (shipment_number) => {
   // Get Data
+  // Example /api/v1/shipments?status[in]=PICKED UP&status[in]=ARRIVED HUB
   let res = await axios.get(
-    `/api/v1/shipments?waybill_number=${shipment_number}&status=PICKED UP`
+    `/api/v1/shipments?waybill_number=${shipment_number}&status[in]=PICKED UP&status[in]=UN DELIVERED`
   );
 
   // if(res) {
