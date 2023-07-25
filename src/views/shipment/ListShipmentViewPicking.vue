@@ -24,7 +24,8 @@ const globalStore = useGlobalStore();
 const form_input = ref({
   selectCompany: "",
   waybillNumber: "",
-  shipmentNumber: ""
+  shipmentNumber: "",
+  telephoneNumber:""
 });
 
 onMounted(() => {
@@ -58,6 +59,10 @@ const submitKey = async (e) => {
     page.value = 1;
     await getShipments()
   }
+  if (form_input.value.telephoneNumber.length > 0) {
+    page.value = 1;
+    await getShipments()
+  }
 };
 
 const getShipments = async () => {
@@ -78,9 +83,14 @@ const getShipments = async () => {
     ?""
     : `&shipment_number=${form_input.value.shipmentNumber}`;
 
+    const filter3 =  
+    form_input.value.telephoneNumber === ""
+    ?""
+    : `&phone=${form_input.value.telephoneNumber}`;
+
 
     const res = await axios.get(
-      `/api/v1/shipments?status=PICKING UP&limit=25&page=${page.value}${filter}${filter1}${filter2}`
+      `/api/v1/shipments?status=PICKING UP&limit=25&page=${page.value}${filter}${filter1}${filter2}${filter3}`
     );
     pageCount.value = Math.ceil(res.data.total / 25);
     total.value = res.data.total;
@@ -114,62 +124,84 @@ const formatTime = (dateString) => {
     <div class="p-1 text-gray-900">
       <div class="container px-4 mx-auto bg-slate-100">
         <h1>ค้นหา Shipement โดย  : </h1>
-        <div class="flex flex-wrap text-xs">
-          <div class="w-1/8 px-4">
+        <div class="flex  justify-between text-xs">
+          <div class="w-1/10 px-4">
             <router-link to="/">
             <span
-            class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
-            >All</span
+            class="text-center block my-4 p-3 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
+              >All</span
             >
           </router-link>
           </div>
-          <div class="w-1/8 px-4">
+          <div class="w-1/10 px-4">
+          
             <span
-              class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
+            class="text-center block my-4 p-3 rounded border border-solid text-white bg-gray-500 border-black hover:bg-gray-800 hover:text-white"
               >Submitted</span
             >
+          
           </div>
-          <div class="w-1/8 px-4">
-            <router-link to="shipment/shipment-list-picking">
+          <div class="w-1/10 px-4">
+            <router-link to="shipment-list-picking">
               <span
-                class="text-center block my-4 p-3  text-white bg-red-800 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
+              class="text-center block my-4 p-3 text-white bg-red-800 rounded border border-solid border-red-900 hover:bg-red-800 hover:text-white"
                 >Picking Up</span
-              ></router-link
-            >
+              >
+            </router-link>
           </div>
-          <div class="w-1/8 px-4">
+          <div class="w-1/10 px-4">
+           
             <span
-              class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
+               class="text-center block my-4 p-3 rounded border border-solid text-white bg-gray-500 border-black hover:bg-gray-800 hover:text-white"
               >Picked Up</span
             >
+          
           </div>
-          <div class="w-1/8 px-4">
+          <div class="w-1/10 px-4">
+           
             <span
-              class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
+               class="text-center block my-4 p-3 rounded border border-solid text-white bg-gray-500 border-black hover:bg-gray-800 hover:text-white"
               >Arrived Hub</span
             >
+       
           </div>
-          <div class="w-1/8 px-4">
-            <router-link to="/shipment/shipment-list-sorted">
+          <div class="w-1/10 px-4">
+          
               <span
-                class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
+                 class="text-center block my-4 p-3 rounded border border-solid text-white bg-gray-500 border-black hover:bg-gray-800 hover:text-white"
                 >Sorted</span
-              ></router-link
-            >
+              >
+            
           </div>
-          <div class="w-1/8 px-4">
-            <router-link to="/shipment/shipment-list-sort">
+          <div class="w-1/10 px-4">
+           
               <span
-                class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
+                 class="text-center block my-4 p-3 rounded border border-solid text-white bg-gray-500 border-black hover:bg-gray-800 hover:text-white"
+                >Dispatching</span
+              >
+            
+          </div>
+          <div class="w-1/10 px-4">
+           
+              <span
+                 class="text-center block my-4 p-3 rounded border border-solid text-white bg-gray-500 border-black hover:bg-gray-800 hover:text-white"
                 >Our For Delivery</span
-              ></router-link
+              >
+           
+          </div>
+          <div class="w-1/10 px-4">
+           
+            <span
+               class="text-center block my-4 p-3 rounded border border-solid text-white bg-gray-500 border-black hover:bg-gray-800 hover:text-white"
+              >UN-Del</span
             >
           </div>
-          <div class="w-1/8 px-4">
+          <div class="w-1/10 px-4">
+          
             <span
-              class="text-center block my-4 p-3 text-blueGray-700 rounded border border-solid border-red-300 hover:bg-red-800 hover:text-white"
+               class="text-center block my-4 p-3 rounded border border-solid text-white bg-gray-500 border-black hover:bg-gray-800 hover:text-white"
               >Delivered</span
-            >
+           >
           </div>
         </div>
         <div id="dropdown_comapany">
@@ -188,16 +220,24 @@ const formatTime = (dateString) => {
             </option>
           </select>
         </div>
+        <div  class=" grid grid-cols-3">
         <div class=" mt-2">
           <label for="waybillNumber" class="block mb-2 text-xs font-medium text-gray-900 dark:text-white"></label>
           <input  v-model.lazy="form_input.waybillNumber"  v-on:keyup.enter="submitKey" id="form_input.waybillNumber" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500 dark:shadow-sm-light" placeholder="Waybill Number">
         </div>
-        <div class="mb-2 mt-2">
+        <div class="mb-2 mt-2 ml-5">
           <label for="shipmentNumber" class="block mb-2 text-xs font-medium text-gray-900 dark:text-white"></label>
           <input  v-model.lazy="form_input.shipmentNumber"  v-on:keyup.enter="submitKey" id="form_input.shipmentNumber" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500 dark:shadow-sm-light" placeholder="Shipment Number">
         </div>
+        <div class="mb-2 mt-2 ml-5">
+          <label for="telephoneNumber" class="block mb-2 text-xs font-medium text-gray-900 dark:text-white"></label>
+          <input  v-model.lazy="form_input.telephoneNumber"  v-on:keyup.enter="submitKey" id="form_input.telephoneNumber" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500 dark:shadow-sm-light" placeholder="Telephone Number">
+        </div>
+      </div>
       </div>
     </div>
+    <!-- End Search -->
+
     <!-- Content Header -->
     <div class="p-1 text-gray-900 bg-gray-100">
       <span>Page : {{ page }}</span> of <span>{{ pageCount }}</span> Results:
@@ -241,7 +281,7 @@ const formatTime = (dateString) => {
             :cod_amount="ship.cargo_info.cod_amount"
             :shipment_fee="ship.cargo_info.cod_amount"
             :picked_up_date="
-              formatDate(ship.createdAt) + ' ' + formatTime(ship.createdAt)
+              formatDate(ship.created_date) + ' ' + formatTime(ship.created_date)
             "
             :status="ship.status"
           >

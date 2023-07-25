@@ -3,19 +3,12 @@
     id="SingleMessageSection"
     class="w-full bg-white ml-2 rounded-t-xl h-full shadow-sm overflow-y-scroll"
   >
+  
     <div class="border-b">
       <div class="flex items-center justify-between px-1.5 py-0.5">
         <div class="flex">
-          <a href="javascript:history.go(-1)">
-            <IconComponent
-              iconString="back"
-              :iconSize="19"
-              iconColor="#636363"
-              text="Back to inbox"
-              hoverColor="hover:bg-gray-100"
-            />
-          </a>
-          <h1 class="font-bold mb-2 ml-2 mt-2">
+        
+          <h1 class="font-bold mb-2 ml-5 mt-2">
             เลือกบริษัท เลือกไฟล์ เพื่อทำการ Upload Shipment
           </h1>
         </div>
@@ -23,8 +16,8 @@
         <div class="text-xs text-gray-500">Shipement Upload</div>
       </div>
     </div>
-
-    <div class="w-full flex bg-gray-100">
+    
+    <div class="grid grid-cols-1 bg-gray-100">
       <div id="subsigle" class="px-6 mt-5">
         <!-- Start Row1 -->
         <div
@@ -46,7 +39,6 @@
                 {{ item.name }}
               </option>
             </select>
-        
           </div>
 
           <div class="ml-2 mt-1">
@@ -136,7 +128,7 @@
             </button>
             <button
               v-if="!isChangedComputed"
-              @click="transFormData"
+              @click="transFormDataTest"
               class="px-4 py-2 rounded focus:outline-none bg-gray-900 text-white font-semibold"
             >
               Confirm to Upload Shipments
@@ -157,10 +149,9 @@ import IconComponent from "@/components/IconComponent.vue";
 import { useGlobalStore } from "@/stores/global-store";
 import { useUserStore } from "@/stores/user-store";
 import { useRoute, useRouter } from "vue-router";
-import  mongoose  from 'mongoose'
+import mongoose from "mongoose";
 
 //import bson from 'bson';
-
 
 const globalStore = useGlobalStore();
 const userStore = useUserStore();
@@ -216,12 +207,15 @@ const isChangedComputed = computed(() => {
   return true;
 });
 
-const transFormData = () => {
+const transFormDataTest = () => {
+  groupedShipments(dataAll.value);
+};
+
+const transFormData = async () => {
   if (form_input.value.selectCompany === "") {
     alert("โปรดระบุ Company");
     return;
   }
-
 
   const company = form_input.value.selectCompany.split("||");
   // Transform the data
@@ -234,34 +228,23 @@ const transFormData = () => {
 
   let randomInit = "";
   let randomLogInt = "";
+  const randomUplaod = `UP${Date.now()}${Math.round(Math.random() * 100)}`;
   let id = "";
+
+  let groupedShipment = await groupedShipments(dataAll.value);
+
   for (var i = 0; i < dataAll.value.length; i++) {
     randomInit = `TH${Date.now()}${Math.round(Math.random() * 1000)}`;
     randomLogInt = `LG${Date.now()}${Math.round(Math.random() * 1000)}`;
+
     id = new mongoose.Types.ObjectId();
-   
-// 5cabe64dcf0d4447fa60f5e2
-  
-    const content = dataAll.value[i].product_description.split("||");
-    const item = dataAll.value[i].sku_id.split("||");
 
-    // if (item) {
-    //   items = []
-    //   for (var it = 0; it < item.length; it++) {
+    console.log(dataAll.value[i].contents);
+    const content = (dataAll.value[i].contents = "undefined"
+      ? ""
+      : dataAll.value[i].contents.split("||"));
 
-    //    const product = item[it].split(",").map((val) => val.trim());
-
-    //    var data = {
-    //     product:product[0],
-    //     quantity:product[1]
-    //     };
-
-    //     items.push(data);
-    //   }
-    // }
-    // console.log(items)
-
-    if (content) {
+    if (content !="") {
       contents = [];
       for (var it = 0; it < content.length; it++) {
         contents.push(content[it]);
@@ -269,60 +252,139 @@ const transFormData = () => {
     }
 
     if (dataAll.value[i].shipment_number != "") {
-      transformedData.push({
-        _id:id,
-        shipment_number: dataAll.value[i].shipment_number,
-        waybill_number: randomInit,
-        shipping_full_name: dataAll.value[i].shipping_full_name,
-        shipping_address_line1: dataAll.value[i].shipping_address_line1,
-        shipping_address_line2: dataAll.value[i].shipping_address_line2,
-        city: dataAll.value[i].city,
-        state: dataAll.value[i].state,
-        zipcode: dataAll.value[i].zipcode,
-        phone: dataAll.value[i].phone,
-        is_by_pass: dataAll.value[i].is_by_pass,
-        user: userStore.id,
-        company: company[0],
-        warehouse: company[1],
-        cargo_info: {
-          weight: dataAll.value[i].weight_kg,
-          lengths: dataAll.value[i].lengths_cm,
-          width: dataAll.value[i].width_cm,
-          height: dataAll.value[i].height_cm,
-          cod_amount: dataAll.value[i].cod_amount,
-          iscod: dataAll.value[i].cod_amount > 0 ? "Y" : "N",
-        },
+      var isExist = checkDuplicate(
+        transformedData,
+        dataAll.value[i].shipment_number
+      );
+      //  if (isExist) {
+      //  } else
+      //console.log(isExist);
+      //numberArray.value.push(numberValue.value);
+      if (!isExist) {
+        let findShipmentItem = findShipmentItems(
+          groupedShipment,
+          dataAll.value[i].shipment_number
+        );
+        console.log(findShipmentItem);
+        // Add to Array
+        transformedData.push({
+          _id: id,
+          shipment_number: dataAll.value[i].shipment_number,
+          waybill_number: randomInit,
+          shipping_full_name: dataAll.value[i].shipping_full_name,
+          shipping_address_line1: dataAll.value[i].shipping_address_line1,
+          shipping_address_line2: dataAll.value[i].shipping_address_line2,
+          city: dataAll.value[i].district,
+          state: dataAll.value[i].province,
+          zipcode: dataAll.value[i].zipcode,
+          phone: dataAll.value[i].phone,
+          is_by_pass: dataAll.value[i].is_by_pass,
+          user: userStore.id,
+          company: company[0],
+          warehouse: company[1],
+          cargo_info: {
+            weight: dataAll.value[i].weight_kg,
+            lengths: dataAll.value[i].lengths_cm,
+            width: dataAll.value[i].width_cm,
+            height: dataAll.value[i].height_cm,
+            cod_amount: dataAll.value[i].cod_amount,
+            iscod: dataAll.value[i].cod_amount > 0 ? "Y" : "N",
+          },
+          content_items: contents.length>0?contents:getContentItems(findShipmentItem),
+          // shipment_items: items,
+          sales_channel: "Upload",
+          order_items: findShipmentItem,
+          upload_doc:randomUplaod
+        });
 
-        content_items: contents,
-        // shipment_items: items,
-        sales_channel: "Upload",
-      });
+        //Create Log of New Shipments
+        const shipmentlog = {
+          user: userStore.id,
+          log_number: randomLogInt,
+          waybill_number: randomInit,
+          shipment_number: dataAll.value[i].shipment_number,
+          event: "DATA SUBMITTED",
+          shipment_id: id,
+          ref_number: randomUplaod,
+        };
 
-      //Create Log of New Shipments
-      const shipmentlog = {
-        user: userStore.id,
-        log_number: randomLogInt,
-        waybill_number: randomInit,
-        shipment_number: dataAll.value[i].shipment_number,
-        event: "DATA SUBMITTED",
-     shipment_id: id,
-        ref_number: `Upload${Date.now()}`,
-      };
-
-      transformedDataLog.push(shipmentlog);
-
-      items = [];
-      contents = [];
+        transformedDataLog.push(shipmentlog);
+        items = [];
+        contents = [];
+        findShipmentItem = [];
+      }
     }
   }
-
-   //alert(JSON.stringify(transformedDataLog));
-  handleUpload(transformedData,transformedDataLog);
+  //alert(JSON.stringify(transformedDataLog));
+  //console.log(transformedData);
+  if (transformedData.length > 0) {
+    handleUpload(transformedData, transformedDataLog);
+    // console.log(transformedData);
+  } else {
+    alert("No Data to upload!");
+  }
 };
 
-const handleUpload = async (data,datalog) => {
-    const title = `Do you want to upload this data? total records are ${data.length}`
-    
+const checkDuplicate = (data, check_value) => {
+  //Check Existing value
+  const existingValue = data.find(
+    (item) => item.shipment_number === check_value
+  );
+  if (existingValue) {
+    //alert('No Duplicates Allowed!');
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const groupedShipments = async (arrs) => {
+  // Grouping Shipment by company and warehouse
+  const arr = Array.from(arrs);
+  const grouped = {};
+  arr.forEach((shipment) => {
+    const key = shipment.shipment_number;
+    if (!grouped[key]) {
+      grouped[key] = [];
+    }
+    const ship = {
+      sku: shipment.sku,
+      product_name: shipment.product_name,
+      order_quantity: shipment.order_quantity,
+      net_amount: shipment.net_amount,
+      discount_amount: shipment.discount_amount,
+      varaintion_name: "",
+    };
+    grouped[key].push(ship);
+  });
+
+  // Generate JSON to create new Picking Up Plan
+  let ObjArr = Object.entries(grouped);
+  // Return Object
+  return ObjArr;
+};
+
+const findShipmentItems = (arrs, shipment_number) => {
+  const existingValue = arrs.find((item) => item[0] === shipment_number);
+  //console.log(existingValue[1]);
+  if (existingValue) {
+    return existingValue[1];
+  } else {
+    return [];
+  }
+};
+
+const getContentItems = (arrs) => {
+  var contents = [];
+  for (var it = 0; it < arrs.length; it++) {
+    contents.push(arrs[it].product_name);
+  }
+  return contents;
+};
+
+const handleUpload = async (data, datalog) => {
+  const title = `Do you want to upload this data? total records are ${data.length}`;
+
   try {
     Swal.fire({
       title: title,
@@ -333,25 +395,34 @@ const handleUpload = async (data,datalog) => {
     }).then(async (result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-
         try {
           const res = await axios.post("/api/v1/shipments/upload", data);
+        } catch (error) {
+          Swal.fire(
+            "Data was not uploaded Successfully!",
+            error.response.data.error,
+            "error"
+          );
+          //console.log(error.response.data.error)
+          return;
+        }
 
-        } catch (error) {
-          Swal.fire("Data was not uploaded Successfully!",error.response.data.error, "error");
-          //console.log(error.response.data.error)
-          return
-        }
-        
         try {
-          const reslog = await axios.post("/api/v1/shipments/log-upload", datalog);
+          const reslog = await axios.post(
+            "/api/v1/shipments/log-upload",
+            datalog
+          );
         } catch (error) {
-          Swal.fire("Data was not uploaded Successfully!",error.response.data.error, "error");
+          Swal.fire(
+            "Data was not uploaded Successfully!",
+            error.response.data.error,
+            "error"
+          );
           //console.log(error.response.data.error)
-          return
+          return;
         }
-       
-       // res.error.response.status
+
+        // res.error.response.status
 
         Swal.fire("Data was uploaded Successfully!", "", "success");
         router.push("/shipment");
@@ -360,8 +431,8 @@ const handleUpload = async (data,datalog) => {
       }
     });
   } catch (error) {
-    console.log(error.response.data.error)
-   
+    console.log(error.response.data.error);
+
     // Swal.fire(`Data incorrect - ${error}`, "Please try again!!", "warning");
     swalMessage(
       `Data upload incorrect - ${error}`,

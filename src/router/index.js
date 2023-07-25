@@ -7,12 +7,20 @@ import ViewShipmentView from '../views/shipment/ViewShipmentView.vue'
 import ViewPickupView from '../views/pickup/ViewPickupView.vue'
 import UploadShipmentFileView from '../views/shipment/UploadShipmentFileView.vue'
 import ListShipmentViewPicking from '../views/shipment/ListShipmentViewPicking.vue'
-import ListShipmentViewSort from '../views/shipment/ListShipmentViewSort.vue'
+import ListShipmentViewSorted from '../views/shipment/ListShipmentViewSorted.vue'
 import ViewShipmentTrackingView from '../views/shipment/ViewShipmentTrackingView.vue'
 import ListShipmentViewSubmit from '../views/shipment/ListShipmentViewSubmit.vue'
 import ListShipmentViewPick from '../views/shipment/ListShipmentViewPick.vue'
 import ListFollowupPickupView from '../views/pickup/ListFollowupPickupView.vue'
 import ListFollowupLoadingView from '../views/dispatch/ListFollowupLoadingView.vue'
+import ListShipmentViewArrivedHub from '../views/shipment/ListShipmentViewArrivedHub.vue'
+import ListShipmentViewDispatching from '../views/shipment/ListShipmentViewDispatching.vue'
+import ListShipmentViewOutForDelivery from '../views/shipment/ListShipmentViewOutForDelivery.vue'
+import ListShipmentViewUnDelivery from '../views/shipment/ListShipmentViewUnDelivery.vue'
+import ListShipmentViewDelivered from '../views/shipment/ListShipmentViewDelivered.vue'
+
+import DeleteShipmentView from '../views/shipment/DeleteShipmentView.vue'
+
 import ViewLoadingView from '../views/dispatch/ViewLoadingView.vue'
 
 
@@ -119,6 +127,10 @@ const routes = [
         component: ListShipmentView
       },
       {
+        path: 'delete-shipment',
+        component: DeleteShipmentView
+      },
+      {
         path: 'shipment-list-picking',
         component: ListShipmentViewPicking
       },
@@ -128,7 +140,7 @@ const routes = [
       },
       {
         path: 'shipment-list-sorted',
-        component: ListShipmentViewSort
+        component: ListShipmentViewSorted
       },
       {
         path: 'shipment-list-picked',
@@ -137,6 +149,26 @@ const routes = [
       {
         path: 'shipment-list-submitted',
         component: ListShipmentViewSubmit
+      },
+      {
+        path: 'shipment-list-arrived-hub',
+        component: ListShipmentViewArrivedHub
+      },
+      {
+        path: 'shipment-list-dispatching',
+        component: ListShipmentViewDispatching
+      },
+      {
+        path: 'shipment-list-out-for-delivery',
+        component: ListShipmentViewOutForDelivery
+      },
+      {
+        path: 'shipment-list-un-delivery',
+        component: ListShipmentViewUnDelivery
+      },
+      {
+        path: 'shipment-list-delivered',
+        component: ListShipmentViewDelivered
       },
       
       {

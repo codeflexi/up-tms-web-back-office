@@ -11,7 +11,9 @@ export const useShipmentStore = defineStore("shipment", {
     shipment_logs: [],
     shipments_id: [],
     cargo_info: [],
-    shipment_items: []
+    shipment_items: [],
+    order_items: [],
+    order_contents: []
   }),
 
 
@@ -24,6 +26,13 @@ export const useShipmentStore = defineStore("shipment", {
     },
     getShipmentItems(state) {
       return state.shipment_items
+    },
+  
+    getOrderItems(state) {
+      return state.order_items
+    },
+    getOrderContents(state) {
+      return state.order_contents
     },
     getShipmentsById(state) {
       return state.shipments_id
@@ -43,6 +52,10 @@ export const useShipmentStore = defineStore("shipment", {
         this.$state.shipments = data.data
         this.$state.cargo_info = data.data.data.cargo_info
         this.$state.shipment_items = data.data.data.shipment_items
+        this.$state.order_items = data.data.data.order_items
+        this.$state.order_contents = data.data.data.content_items
+      
+       
       }
       catch (error) {
         //alert(error)
@@ -75,6 +88,9 @@ export const useShipmentStore = defineStore("shipment", {
         console.log(error)
       }
     },
+
+    
+
     async handleCreatePickUp(data) {
       try {
         const res = await axios.post("/api/v1/shipment-picks", {
@@ -92,6 +108,16 @@ export const useShipmentStore = defineStore("shipment", {
         console.log(error);
       }
     },
+
+    async handleDeleteShipment(id) {
+      try {
+        const res = await axios.delete(`/api/v1/shipments/${id}`);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+
     async handleCreateDispatch(data) {
       try {
         //console.log('Post Dispatch')

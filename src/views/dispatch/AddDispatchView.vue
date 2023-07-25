@@ -86,14 +86,14 @@
                   type="button"
                   class="px-4 py-2 rounded focus:outline-none border-2 border-gray-300 text-red-600 font-semibold"
                 >
-                  Cancel
+                  C A N C E L
                 </button>
                 <button
                   @click="close"
                   type="submit"
                   class="px-4 py-2 rounded focus:outline-none bg-red-600 text-white font-semibold"
                 >
-                  Update Route
+                  S A V E
                 </button>
               </div>
             </div>
@@ -189,6 +189,7 @@ const onSelectChange = (e) => {
 };
 
 const groupedShipments = async () => {
+  
   // Grouping Shipment by company and warehouse
   const arr = Array.from(shipmentStore.getShipmentsById.data);
   const grouped = {};

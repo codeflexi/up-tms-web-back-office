@@ -90,7 +90,7 @@ const getShipments = async () => {
 
 
     const res = await axios.get(
-      `/api/v1/shipments?status=PICKED UP&limit=25&page=${page.value}${filter}${filter1}${filter2}${filter3}`
+      `/api/v1/shipments?status=SORTED&limit=25&page=${page.value}${filter}${filter1}${filter2}${filter3}`
     );
     pageCount.value = Math.ceil(res.data.total / 25);
     total.value = res.data.total;
@@ -149,30 +149,32 @@ const formatTime = (dateString) => {
             >
           
           </div>
-          <div class="w-1/10 px-4">
-            <router-link to="shipment-list-picked">
-              <span
-              class="text-center block my-4 p-3 text-white bg-red-800 rounded border border-solid border-red-900 hover:bg-red-800 hover:text-white"
-                >Picked Up</span
-              >
-            </router-link>
-          </div>
+         
        
           <div class="w-1/10 px-4">
            
             <span
                class="text-center block my-4 p-3 rounded border border-solid text-white bg-gray-500 border-black hover:bg-gray-800 hover:text-white"
-              >Arrived Hub</span
+              >Picked Up</span
             >
        
           </div>
+       
           <div class="w-1/10 px-4">
           
               <span
                  class="text-center block my-4 p-3 rounded border border-solid text-white bg-gray-500 border-black hover:bg-gray-800 hover:text-white"
-                >Sorted</span
+                >Arrived Hub</span
               >
             
+          </div>
+          <div class="w-1/10 px-4">
+            <router-link to="shipment-list-sorted">
+              <span
+              class="text-center block my-4 p-3 text-white bg-red-800 rounded border border-solid border-red-900 hover:bg-red-800 hover:text-white"
+                >Sorted</span
+              >
+            </router-link>
           </div>
           <div class="w-1/10 px-4">
            

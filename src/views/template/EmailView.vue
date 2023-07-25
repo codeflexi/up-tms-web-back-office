@@ -180,6 +180,23 @@
             </div>
           </div>
         </router-link>
+
+        <router-link to="/shipment/delete-shipment">
+          <div
+            class="flex side-menu-item justify-between px-6 py-1.5  hover:bg-red-800 hover:text-white  rounded-r-full "
+            v-bind:class="{ 'bg-indigo-500': active === 'DELETE-SHIPMENT' }"
+            @click="setActive('DELETE-SHIPMENT')"
+          >
+            <div class="flex items-center">
+              <DeleteIcon :size="24" />
+              <div class="text-sm pl-4 font-semibold">DELETE SHIPMENTS</div>
+            </div>
+          </div>
+        </router-link>
+
+
+        <div class="border-b border-b-gray-300 my-2.5"></div>
+
       </div>
 
       <!-- this is where the page changes -->
@@ -293,6 +310,7 @@ import TruckOutline from "vue-material-design-icons/TruckOutline.vue";
 import RobotIcon from "vue-material-design-icons/RobotIndustrialOutline.vue";
 import BoxIcon from "vue-material-design-icons/ArchiveOutline.vue";
 import ReceiveIcon from "vue-material-design-icons/HandCoinOutline.vue";
+import DeleteIcon from "vue-material-design-icons/DeleteForever.vue";
 
 import PlusIcon from "vue-material-design-icons/Plus.vue";
 import CloseIcon from "vue-material-design-icons/Close.vue";

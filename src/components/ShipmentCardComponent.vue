@@ -4,7 +4,7 @@
 
     const {_id,sales_channel,
          shipment_number ,
-         picked_up_date,
+          picked_up_date,
           waybill_number,
           ship_to_province,
           ship_to_name,

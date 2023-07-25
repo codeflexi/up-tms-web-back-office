@@ -2,9 +2,8 @@ import axios from "axios";
 
 
 //axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:5000";
-
-// axios.defaults.baseURL = "https://api-tms.upecommerce.app";
+//axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.baseURL = "https://api-tms.upecommerce.app";
 
 
 //axios.defaults.baseURL = process.env.VUE_APP_API_URL;
