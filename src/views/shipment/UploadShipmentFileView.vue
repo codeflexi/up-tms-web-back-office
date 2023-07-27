@@ -397,9 +397,16 @@ const handleUpload = async (data, datalog) => {
       if (result.isConfirmed) {
         try {
           console.log('upload shipments')
+          // varToken = useUserStore().token ?useUserStore().token:''
+          // console.log(varToken)
           // axios.defaults.headers.common['Authorization'] = 'Bearer ' + useUserStore().token ?useUserStore().token:'';
            console.log(axios.defaults.headers.common['Authorization'])
-          const res = await axios.post("/api/v1/shipments/upload", data);
+          const res = await axios.post("/api/v1/shipments/upload", data ,
+          {
+  headers: {
+    Authorization: 'Bearer ' + useUserStore().token
+  }}
+          );
         } catch (error) {
           Swal.fire(
             "Data was not uploaded Successfully!",
