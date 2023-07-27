@@ -6,8 +6,8 @@ import Modal from "@/views/route/AddNewRouteView.vue";
 import IconComponent from "@/components/IconComponent.vue";
 import VPagination from "@hennge/vue3-pagination";
 import "@hennge/vue3-pagination/dist/vue3-pagination.css";
-import moment from "moment";
 import axios from "axios";
+import moment from 'moment'
 
 const routeStore = useRouteStore();
 
@@ -64,6 +64,21 @@ const fechShipmentRoutes = async () => {
   await routeStore.fetchShipmentRoutes(page.value);
   pageCount.value = Math.ceil(routeStore.getShipmentRoutes.total / 25);
   total.value = routeStore.getShipmentRoutes.total;
+};
+
+
+
+const formatDate = (dateString) => {
+ // {{ moment(pick.planned_date).format("MMM D HH:mm") }}
+  const event = new Date(dateString);
+  return moment(event.toLocaleDateString("en-TH")).format("DD-MM-YYYY");
+};
+
+const formatTime = (dateString) => {
+  const event = new Date(dateString);
+  //MMM D HH:mm
+  return moment(dateString).format("HH:mm");
+  //return event.toLocaleTimeString("en-TH").toString();
 };
 
 
@@ -137,7 +152,8 @@ const fechShipmentRoutes = async () => {
             </div>
             <div class=" px-2 py-2 bg-red-900 rounded-lg  text-white">
               <h3><b> Picking Date:</b>
-                {{ moment(pick.planned_date).format("MMM D HH:mm") }}</h3>
+                {{ formatDate(pick.planned_date) }} {{ formatTime(pick.planned_date) }}
+               </h3>
             <h3 class="text-lg">
               <b> คนขับ:</b>
               {{ pick.driver?.name }} {{ pick.driver?.last_name }}</h3>
@@ -160,6 +176,7 @@ const fechShipmentRoutes = async () => {
     </div>
   </div>
 </template>
+
 
 <style scoped>
 * {

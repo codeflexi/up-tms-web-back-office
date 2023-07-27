@@ -239,7 +239,7 @@ const transFormData = async () => {
 
     id = new mongoose.Types.ObjectId();
 
-    console.log(dataAll.value[i].contents);
+    //console.log(dataAll.value[i].contents);
     const content = (dataAll.value[i].contents = "undefined"
       ? ""
       : dataAll.value[i].contents.split("||"));
@@ -265,7 +265,7 @@ const transFormData = async () => {
           groupedShipment,
           dataAll.value[i].shipment_number
         );
-        console.log(findShipmentItem);
+       // console.log(findShipmentItem);
         // Add to Array
         transformedData.push({
           _id: id,
@@ -396,6 +396,9 @@ const handleUpload = async (data, datalog) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         try {
+          console.log('upload shipments')
+          // axios.defaults.headers.common['Authorization'] = 'Bearer ' + useUserStore().token ?useUserStore().token:'';
+           console.log(axios.defaults.headers.common['Authorization'])
           const res = await axios.post("/api/v1/shipments/upload", data);
         } catch (error) {
           Swal.fire(

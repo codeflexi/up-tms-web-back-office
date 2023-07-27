@@ -90,7 +90,7 @@ class="max-w-none p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:
           <!-- Start Product Table -->
           <div
          
-            class="max-w-3xl overflow-x-auto relative shadow-md sm:rounded-lg"
+            class=" w-auto shadow-md sm:rounded-lg grid grid-cols-1"
           >
           <p class="mt-3"></p>
             <table

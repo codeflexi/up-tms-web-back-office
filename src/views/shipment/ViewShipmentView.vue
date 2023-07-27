@@ -184,11 +184,11 @@ class="max-w-none p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:
           <!-- Start Product Table Order Items -->
          <div v-show="shipmentStore?.getOrderItems"
          
-            class="max-w-3xl overflow-x-auto relative shadow-md sm:rounded-lg"
+            class=" grid grid-cols-1 shadow-md sm:rounded-lg"
           >
           <p class="mt-3"></p>
             <table 
-              class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
+              class=" w-auto text-sm text-left text-gray-500 dark:text-gray-400"
             >
               <thead
                 class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
@@ -248,11 +248,11 @@ class="max-w-none p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:
           <!-- Start Product Table -->
           <div v-show="shipmentStore.getShipmentItems"
          
-            class="max-w-3xl overflow-x-auto relative shadow-md sm:rounded-lg"
+            class=" grid grid-cols-1 shadow-md sm:rounded-lg"
           >
           <p class="mt-3"></p>
             <table 
-              class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
+              class="w-auto  text-sm text-left text-gray-500 dark:text-gray-400"
             >
               <thead
                 class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"

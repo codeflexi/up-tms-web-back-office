@@ -28,6 +28,7 @@ export const useUserStore = defineStore('user', {
     picture: '',
     firstName: '',
     lastName: '',
+    token:'',
     authErrors:'',
     users:{},
     emails: [],
@@ -45,6 +46,7 @@ export const useUserStore = defineStore('user', {
         this.$state.picture = res.user.email
         this.$state.firstName = res.user.name
         this.$state.lastName = res.user.name
+        
        
     },
     async setProfileDetails(me) {
@@ -79,6 +81,7 @@ export const useUserStore = defineStore('user', {
           this.$state.picture = 'https://via.placeholder.com/48.jpg'
           this.$state.firstName = meprofile.value.data.user.name
           this.$state.lastName = meprofile.value.data.user.name
+          this.$state.token = meprofile.value.data.token
 
          // this.getUserProfile();
 
@@ -189,6 +192,7 @@ this.$state.shipment = shipmentId.value.data.data;
         this.$state.picture = ''
         this.$state.sub = ''
         this.$state.id = ''
+        this.$state.token = ''
         this.authErrors = ''
         this.$state.emails = []
         this.$state.shipment = []
